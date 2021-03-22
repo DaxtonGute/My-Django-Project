@@ -1,5 +1,12 @@
 <h1>This will be the home page</h1>
-{% if False %} <p><strong>login FIRST</strong></p>
-{% else %} <p><strong>you are logged in</strong></p> 
+{% if isGuest %} <p><strong>login FIRST</strong></p>
+{% else %} <p><strong>you are logged in</strong></p>
 {% endif %}
 There will be two states of exsistence. signed-in and not signed-in
+<form class="" action="" method="POST">
+{% csrf_token %}
+{{ form.as_p }}
+<button name="switchViews" value="switchViews">Switch Views</button>
+<button name="logIn" value="logIn">logIn</button>
+<button name="logOut" value="logOut">logOut</button>
+</form>

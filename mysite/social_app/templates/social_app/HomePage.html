@@ -3,10 +3,19 @@
 {% else %} <p><strong>you are logged in</strong></p>
 {% endif %}
 There will be two states of exsistence. signed-in and not signed-in
-<form class="" action="" method="POST">
+<!-- <form class="" action="" method="POST">
 {% csrf_token %}
 {{ form.as_p }}
-<button name="switchViews" value="switchViews">Switch Views</button>
-<button name="logIn" value="logIn">logIn</button>
-<button name="logOut" value="logOut">logOut</button>
+<button name="switchViews" value="switchViews">Switch Views</button> -->
+
+<button name="logIn" value="logIn" onClick="logIn()">logIn</button>
+<button name="logOut" value="logOut" onClick="logOut()">logOut</button>
 </form>
+<h1>{{isGuest}}</h1>
+{% for groupConvo in ConvoPreview %}
+    <hr>
+    <h1>{{groupConvo.Group_Name}}</h1>
+    <img src="../{{groupConvo.Thumbnail.url}}"/>
+    <a href="./sample-id-here/messages/"> nonfunctional link </a>
+{% endfor %}
+<hr>

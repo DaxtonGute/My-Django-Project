@@ -9,7 +9,7 @@ from . import views
 app_name = 'social_app'
 urlpatterns = [
     path('', views.HomePage.as_view(), name='HomePage'),
-    path('sample-id-here/messages/', views.Messages.as_view(), name='Messages'),
+    path('messages/<GroupConvoID>/', views.Messages.as_view(), name='Messages'),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

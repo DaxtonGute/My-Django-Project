@@ -41,8 +41,9 @@ class HomePage(TemplateView):
 
 class Messages(TemplateView):
     template_name = "./social_app/Messages.html"
-    model = UserMessage
+    # model = UserMessage
     def get_context_data(self,*args, **kwargs):
         context = super(Messages, self).get_context_data(*args,**kwargs)
         context['UserMessage'] = UserMessage.objects.all()
+        context['ConvoPreview'] = ConvoPreview.objects.all()
         return context

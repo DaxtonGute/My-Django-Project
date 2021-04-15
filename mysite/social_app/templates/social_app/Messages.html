@@ -1,7 +1,9 @@
 <h1>This will be a sample message dm</h1>
 It will be generalized in form but the information is specific to that conversation. That id is going to be in the url
 {% for message in UserMessage %}
+  {% if message.GroupConvo.Group_Name == GroupConvoID  %}
     <hr>
     <h2><b>{{message.Author}}</b>   <i>{{message.Time_Stamp}}</i></h2>
-    {{message.Message_Text}}
+    <p>{{message.Message_Text}}</p>
+  {% endif %}
 {% endfor %}

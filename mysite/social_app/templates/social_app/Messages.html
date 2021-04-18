@@ -1,5 +1,6 @@
 <h1>This will be a sample message dm</h1>
 It will be generalized in form but the information is specific to that conversation. That id is going to be in the url
+
 {% for message in UserMessage %}
   {% if message.GroupConvo.Group_Name == GroupConvoID  %}
     <hr>
@@ -7,3 +8,8 @@ It will be generalized in form but the information is specific to that conversat
     <p>{{message.Message_Text}}</p>
   {% endif %}
 {% endfor %}
+<form method="POST">
+  {% csrf_token %}
+  {{ NewPostForm.as_p }}
+  <button type="submit">Submit</button>
+</form>

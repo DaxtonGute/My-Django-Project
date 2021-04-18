@@ -21,3 +21,9 @@ class UserMessage(models.Model):
     def __str__(self):
         messageid = "MESSAGE ("+str(self.MessageId) +")"
         return messageid
+
+    def __init__(self, args):
+        self.Message_Text=args['Message']
+        self.Time_Stamp=args['Date']
+        self.Author=args['Author']
+        self.GroupConvo=args['Convo']

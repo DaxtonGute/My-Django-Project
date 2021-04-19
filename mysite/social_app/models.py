@@ -17,13 +17,24 @@ class UserMessage(models.Model):
     Author = models.CharField(max_length=200, default="DEFAULT_AUTHOR")
     GroupConvo = models.ForeignKey(ConvoPreview, default=-1,  on_delete=models.SET_DEFAULT)
     MessageId = models.AutoField(primary_key=True, unique=True)
+    #objects = UserMessageManager
 
     def __str__(self):
         messageid = "MESSAGE ("+str(self.MessageId) +")"
         return messageid
 
-    def __init__(self, args):
-        self.Message_Text=args['Message']
-        self.Time_Stamp=args['Date']
-        self.Author=args['Author']
-        self.GroupConvo=args['Convo']
+    # def __init__(self, *args):
+    #     self.Message_Text=args[0]
+    #     self.Time_Stamp=args[1]
+    #     self.Author=args[2]
+    #     print(ConvoPreview.objects.all())
+    #     #ConvoObjext = ConvoPreview.objects.all()[int(args[3])]
+    #     for Convo in ConvoPreview.objects.all():
+    #         if Convo.Group_Name == args[3]:
+    #             self.GroupConvo= ConvoObject
+
+class UserMessageManager(models.Manager):
+    def create_message(self, title):
+        book = self.create(title=title)
+        # do something with the book
+        return book

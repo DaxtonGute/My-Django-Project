@@ -57,12 +57,10 @@ class Messages(TemplateView):
             Author = postForm.cleaned_data['Author']
             Date = datetime.date.today()
             postForm = NewPostForm()
-            GroupConvoActualID = 0
+            # args = {'Message': Message, 'Date': Date, 'Author': Author, 'Convo': Convo}
             for Convo in ConvoPreview.objects.all():
-                if Convo.Group_Name == GroupConvoID:
-                    GroupConvoActualID = Convo
-            args = {'Message': Message, 'Date': Date, 'Author': Author, 'Convo': Convo}
-            NewMessage = UserMessage(args)
+                 if Convo.Group_Name == GroupConvoID:
+                    NewMessage = UserMessage.objects.create(Message_Text = Message, Time_Stamp = Date, Author = Author, GroupConvo = Convo)
 
         context = super(Messages, self).get_context_data(*args,**kwargs)
         context['UserMessage'] = UserMessage.objects.all()

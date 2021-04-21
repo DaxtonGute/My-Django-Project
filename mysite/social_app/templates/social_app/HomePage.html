@@ -1,20 +1,36 @@
-<h1>This will be the home page</h1>
-{% if isGuest %} <p><strong>login FIRST</strong></p>
-{% else %} <p><strong>you are logged in</strong></p>
-{% endif %}
-There will be two states of exsistence. signed-in and not signed-in
-<!-- <form class="" action="" method="POST">
-{% csrf_token %}
-{{ form.as_p }}
-<button name="switchViews" value="switchViews">Switch Views</button> -->
+<!DOCTYPE html>
+<html>
 
-<button name="logIn" value="logIn" onClick="logIn()">logIn</button>
-<button name="logOut" value="logOut" onClick="logOut()">logOut</button>
-</form>
-{% for groupConvo in ConvoPreview %}
-    <hr>
-    <h1>{{groupConvo.Group_Name}}</h1>
-    <img src="{{groupConvo.Thumbnail.url}}"/>
-    <a href="./messages/{{groupConvo.Group_Name}}"> nonfunctional link </a>
-{% endfor %}
-<hr>
+  <head>
+    <title>Home</title>
+
+    <!-- This section (4 items) includes Bootstrap 4 -->
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+      <!-- jQuery library -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <!-- Popper JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+      <!-- Latest compiled JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+  </head>
+  <body bgcolor="#111144">
+    <h1>This will be the home page</h1>
+    {% if user.is_authenticated %}
+      Hi {{ user.username }}!
+      <!-- <p><a href="% url 'logout' %">Log Out</a></p> -->
+    {% else %}
+      <p>You are not logged in</p>
+      <a href="{% url 'social_app:login' %}">Log In</a>
+    {% endif %}
+    {% for groupConvo in ConvoPreview %}
+      <div class="media border p-3">
+        <h1>{{groupConvo.Group_Name}}</h1>
+        <img src="{{groupConvo.Thumbnail.url}}" class="mr-3 mt-7 rounded-circle" style="width:100px;"/>
+        <a href="./messages/{{groupConvo.Group_Name}}"> linkie </a>
+      </div>
+    {% endfor %}
+
+  </body>
+</html

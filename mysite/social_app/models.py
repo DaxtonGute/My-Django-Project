@@ -33,8 +33,8 @@ class UserMessage(models.Model):
     #         if Convo.Group_Name == args[3]:
     #             self.GroupConvo= ConvoObject
 
-class UserMessageManager(models.Manager):
-    def create_message(self, title):
-        book = self.create(title=title)
-        # do something with the book
-        return book
+# class UserMessageManager(models.Manager):
+#     def create_message(self, title):
+#         book = self.create(title=title)
+#         # do something with the book
+#         return book

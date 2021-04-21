@@ -3,6 +3,8 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 from django.conf.urls import include, url
+from django.contrib.auth import views as auth_views
+from django.views.generic.base import TemplateView
 
 from . import views
 
@@ -10,6 +12,8 @@ app_name = 'social_app'
 urlpatterns = [
     path('', views.HomePage.as_view(), name='HomePage'),
     path('messages/<GroupConvoID>/', views.Messages.as_view(), name='Messages'),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('', TemplateView.as_view(template_name='HomePage.html'), name='home'),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

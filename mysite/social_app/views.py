@@ -68,3 +68,22 @@ class Messages(TemplateView):
         postForm = NewPostForm()
         context['NewPostForm'] = postForm
         return render(request, "./social_app/Messages.html",context)
+
+class login(TemplateView):
+    def get_context_data(self,*args, **kwargs):
+        return render(request, "./social_app/login.html", {})
+
+class registration(TemplateView):
+    def get_context_data(self,*args, **kwargs):
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.refresh_from_db()
+            user.save()
+            raw_password = form.cleaned_data.get('password')
+            user = authenticate(password=raw_password)
+            login(request, user)
+            return redirect('home')
+        else:
+            form = SignUpForm()
+        return render(request, './social_app/registration.html', {'form': form})

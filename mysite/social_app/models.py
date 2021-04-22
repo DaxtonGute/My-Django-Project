@@ -1,6 +1,24 @@
 from django.db import models
 import datetime
 from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
+
+class UserProfile(models.Model):
+    username = models.CharField(max_length=150)
+    email = models.EmailField(max_length=150)
+    password = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.username
+
+
+@receiver(post_save, sender=UserProfile)
+def update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+    instance.UserProfile.save()
 
 class ConvoPreview(models.Model):
     Group_Name = models.CharField(max_length=200, default="DEFAULT_GROUP")

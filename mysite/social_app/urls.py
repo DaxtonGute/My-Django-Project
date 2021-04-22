@@ -12,8 +12,9 @@ app_name = 'social_app'
 urlpatterns = [
     path('', views.HomePage.as_view(), name='HomePage'),
     path('messages/<GroupConvoID>/', views.Messages.as_view(), name='Messages'),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('', TemplateView.as_view(template_name='HomePage.html'), name='home'),
+    url(r'^login/$', auth_views.LoginView.as_view(), {'template_name':'social_app/login.html'}, name='login'),
+    url(r'^logout/$', auth_views.LogoutView.as_view(), {'template_name':'social_app/logout.html'}, name='logout'),
+    #url(r'^registration/$', auth_views.registration.as_view(), {'template_name': 'social_app/registration.html'}, name='registration'),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

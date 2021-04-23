@@ -14,11 +14,11 @@ class UserProfile(models.Model):
         return self.username
 
 
-@receiver(post_save, sender=UserProfile)
-def update_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-    instance.UserProfile.save()
+# @receiver(post_save, sender=UserProfile)
+# def update_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         UserProfile.objects.create(user=instance)
+#     instance.UserProfile.save()
 
 class ConvoPreview(models.Model):
     Group_Name = models.CharField(max_length=200, default="DEFAULT_GROUP")

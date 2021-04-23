@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import TemplateView
+from django.shortcuts import redirect
 
 from .models import ConvoPreview
-from .models import UserMessage
+from .models import UserMessage, UserProfile
 from .forms import NewPostForm, SignUpForm
 import datetime
 isGuest = False
@@ -73,23 +74,25 @@ class registration(TemplateView):
     template_name = "./registration/registration.html"
 
     def get_context_data(self,*args, **kwargs):
-        context = super(Messages, self).get_context_data(*args,**kwargs)
-        form = NewPostForm()
-        context['SignUpForm'] = postForm
+        context = super(registration, self).get_context_data(*args,**kwargs)
+        form = SignUpForm()
+        context['SignUpForm'] = form
         return context
 
     def post(self, request, *args, **kwargs):
         form = SignUpForm(request.POST)
         print("hello")
         if form.is_valid():
-            print("hi")
             user = form.save()
             user.refresh_from_db()
             user.save()
-            raw_password = form.cleaned_data.get('password')
-            user = authenticate(password=raw_password)
-            login(request, user)
-            return redirect('home')
+            password = form.cleaned_data.get('password1')
+            email = form.cleaned_data.get('email')
+            username = form.cleaned_data.get('username')
+            user = UserProfile.objects.create(username=username,
+                                 email=email,
+                                 password=password)
+            return redirect('../login')
         else:
             form = SignUpForm()
         return render(request, './registration/registration.html', {'SignUpForm': form})

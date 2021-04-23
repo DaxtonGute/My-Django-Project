@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
+from django.contrib.auth import authenticate, login
 
 from .models import ConvoPreview
 from .models import UserMessage, UserProfile
@@ -89,10 +90,11 @@ class registration(TemplateView):
             password = form.cleaned_data.get('password1')
             email = form.cleaned_data.get('email')
             username = form.cleaned_data.get('username')
-            user = UserProfile.objects.create(username=username,
+            user = authenticate(username=username,
                                  email=email,
                                  password=password)
-            return redirect('../login')
+            login(request, user)
+            return redirect('../')
         else:
             form = SignUpForm()
         return render(request, './registration/registration.html', {'SignUpForm': form})

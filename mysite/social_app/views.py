@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 
 from .models import ConvoPreview
 from .models import UserMessage
-from .forms import NewPostForm
+from .forms import NewPostForm, SignUpForm
 import datetime
 isGuest = False
 
@@ -69,14 +69,20 @@ class Messages(TemplateView):
         context['NewPostForm'] = postForm
         return render(request, "./social_app/Messages.html",context)
 
-class login(TemplateView):
-    def get_context_data(self,*args, **kwargs):
-        return render(request, "./social_app/login.html", {})
-
 class registration(TemplateView):
+    template_name = "./registration/registration.html"
+
     def get_context_data(self,*args, **kwargs):
+        context = super(Messages, self).get_context_data(*args,**kwargs)
+        form = NewPostForm()
+        context['SignUpForm'] = postForm
+        return context
+
+    def post(self, request, *args, **kwargs):
         form = SignUpForm(request.POST)
+        print("hello")
         if form.is_valid():
+            print("hi")
             user = form.save()
             user.refresh_from_db()
             user.save()
@@ -86,4 +92,4 @@ class registration(TemplateView):
             return redirect('home')
         else:
             form = SignUpForm()
-        return render(request, './social_app/registration.html', {'form': form})
+        return render(request, './registration/registration.html', {'SignUpForm': form})

@@ -12,9 +12,9 @@ app_name = 'social_app'
 urlpatterns = [
     path('', views.HomePage.as_view(), name='HomePage'),
     path('messages/<GroupConvoID>/', views.Messages.as_view(), name='Messages'),
-    url(r'^login/$', auth_views.LoginView.as_view(), {'template_name':'social_app/login.html'}, name='login'),
-    url(r'^logout/$', auth_views.LogoutView.as_view(), {'template_name':'social_app/logout.html'}, name='logout'),
-    #url(r'^registration/$', auth_views.registration.as_view(), {'template_name': 'social_app/registration.html'}, name='registration'),
+    url(r'^login/$', auth_views.LoginView.as_view(), {'template_name':'registration/login.html'}, name='login'),
+    url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
+    url(r'^registration/$', views.registration.as_view(), {'template_name': 'registration/registration.html'}, name='registration'),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

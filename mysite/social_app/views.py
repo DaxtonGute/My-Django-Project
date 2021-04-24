@@ -8,7 +8,6 @@ from .models import ConvoPreview
 from .models import UserMessage, UserProfile
 from .forms import NewPostForm, SignUpForm
 import datetime
-isGuest = False
 
 class HomePage(TemplateView):
     template_name = "./social_app/HomePage.html"
@@ -16,7 +15,6 @@ class HomePage(TemplateView):
     def get_context_data(self,*args, **kwargs):
         context = super(HomePage, self).get_context_data(*args,**kwargs)
         context['ConvoPreview'] = ConvoPreview.objects.all()
-        context['isGuest'] = isGuest
         return context
 
     #def get_queryset(self):

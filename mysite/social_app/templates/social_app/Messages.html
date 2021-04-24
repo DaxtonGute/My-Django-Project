@@ -26,10 +26,15 @@
         <p>{{message.Message_Text}}</p>
       {% endif %}
     {% endfor %}
-    <form method="POST">
-      {% csrf_token %}
-      {{ NewPostForm.as_p }}
-      <button type="submit">Submit</button>
+    {% if user.is_authenticated %}
+      <form method="POST">
+        {% csrf_token %}
+        {{ NewPostForm.as_p }}
+        <button type="submit">Submit</button>
+      {% else %}
+        <p>You must log in to post</p>
+        <a href="{% url 'social_app:login' %}">Log In</a>
+      {% endif %}
     </form>
   </body>
 </html>

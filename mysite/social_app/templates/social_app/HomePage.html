@@ -19,10 +19,10 @@
     <h1>This will be the home page</h1>
     {% if user.is_authenticated %}
       Hi {{ user.username }}!
-      <p><a href="{% url 'social_app:logout' %}">Log Out</a></p>
+      <p><a href="{% url 'social_app:logout' %}?next={{request.path}}">Log Out</a></p>
     {% else %}
       <p>You are not logged in</p>
-      <a href="{% url 'social_app:login' %}">Log In</a>
+      <a href="{% url 'social_app:login' %}?next={{request.path}}">Log In</a>
     {% endif %}
     {% for groupConvo in ConvoPreview %}
       <div class="media border p-3">

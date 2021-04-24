@@ -33,7 +33,7 @@
         <button type="submit">Submit</button>
       {% else %}
         <p>You must log in to post</p>
-        <a href="{% url 'social_app:login' %}">Log In</a>
+        <a href="{% url 'social_app:login' %}?next={{request.path}}">Log In</a>
       {% endif %}
     </form>
   </body>

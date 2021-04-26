@@ -22,7 +22,7 @@
     {% for message in UserMessage %}
       {% if message.GroupConvo.Group_Name == GroupConvoID  %}
         <hr>
-        <h2><b>{{message.Author}}</b>   <i>{{message.Time_Stamp}}</i></h2>
+        <h2><b>{{message.Author.username}}</b>   <i>{{message.Time_Stamp}}</i></h2>
         <p>{{message.Message_Text}}</p>
       {% endif %}
     {% endfor %}

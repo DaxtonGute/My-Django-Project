@@ -54,7 +54,7 @@ class Messages(TemplateView):
         postForm = NewPostForm(request.POST)
         if postForm.is_valid():
             Message = postForm.cleaned_data['Message']
-            Author = request.user.username
+            Author = request.user
             Date = datetime.date.today()
             postForm = NewPostForm()
             # args = {'Message': Message, 'Date': Date, 'Author': Author, 'Convo': Convo}
@@ -80,7 +80,6 @@ class registration(TemplateView):
 
     def post(self, request, *args, **kwargs):
         form = SignUpForm(request.POST)
-        print("hello")
         if form.is_valid():
             user = form.save()
             user.refresh_from_db()

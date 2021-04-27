@@ -20,8 +20,8 @@
     It will be generalized in form but the information is specific to that conversation. That id is going to be in the url
 
     {% for message in UserMessage %}
-      
-      {% if message.GroupConvo.GroupId == GroupConvoID  %}
+    <!-- Change to make the above passed in when the view is rendered. -->
+      {% if message.GroupConvo.GroupId|slugify == GroupConvoID  %}
         <hr>
         <h2><b>{{message.Author.username}}</b>   <i>{{message.Time_Stamp}}</i></h2>
         <p>{{message.Message_Text}}</p>

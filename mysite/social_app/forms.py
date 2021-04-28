@@ -14,4 +14,6 @@ class SignUpForm(UserCreationForm):
 
 class NewPostForm(forms.Form):
     Message = forms.CharField(label='Post Message')
-    
+
+class DeleteMessage(forms.Form):
+     btn = forms.CharField()

@@ -20,13 +20,23 @@
     It will be generalized in form but the information is specific to that conversation. That id is going to be in the url
 
     {% for message in UserMessage %}
-    <!-- Change to make the above passed in when the view is rendered. -->
       {% if message.GroupConvo.GroupId|slugify == GroupConvoID  %}
         <hr>
         <h2><b>{{message.Author.username}}</b>   <i>{{message.Time_Stamp}}</i></h2>
         <p>{{message.Message_Text}}</p>
+
+        {% if message.Author.username == user.username %}
+          <form method="POST">
+             {% csrf_token %}
+             {{deleteForm.as_p}}
+             <input type="hidden" name="btn" value="{{message}}">
+             <button type="submit">DeleteMessage</button>
+          </form>
+        {% endif %}
       {% endif %}
     {% endfor %}
+
+
     {% if user.is_authenticated %}
       <form method="POST">
         {% csrf_token %}

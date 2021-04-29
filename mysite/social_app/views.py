@@ -69,7 +69,6 @@ class Messages(TemplateView):
 
         postForm = NewPostForm(request.POST)
         if postForm.is_valid():
-            print('hil')
             Message = postForm.cleaned_data['Message']
             Author = request.user
             Date = datetime.date.today()

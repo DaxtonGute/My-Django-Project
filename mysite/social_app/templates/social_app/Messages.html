@@ -13,11 +13,22 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
       <!-- Latest compiled JavaScript -->
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+      <meta charset="utf-8">
 
   </head>
   <body bgcolor="#111144">
-    <h1>This will be a sample message dm <a href="../../"> get me out! </a></h1>
-    It will be generalized in form but the information is specific to that conversation. That id is going to be in the url
+    <nav class="navbar navbar-inverse fixed-top bg-dark">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../../">Discourse</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="../../"></a></li>
+          <!-- add a personalized page -->
+        </ul>
+      </div>
+    </nav>
+
 
     {% for message in UserMessage %}
       {% if message.GroupConvo.GroupId|slugify == GroupConvoID  %}

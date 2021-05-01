@@ -41,15 +41,27 @@ class Messages(TemplateView):
     slug_url_kwarg = 'GroupConvoID'
 
     def get_context_data(self,*args, **kwargs):
+        print(*args)
         context = super(Messages, self).get_context_data(*args,**kwargs)
         context['UserMessage'] = UserMessage.objects.all()
         context['ConvoPreview'] = ConvoPreview.objects.all()
+        context['UserWrapper'] = UserWrapper.objects.all()
         postForm = NewPostForm()
         context['NewPostForm'] = postForm
         deleteForm = DeleteMessage()
         context['DeleteMessage'] = deleteForm
         starForm = StarGroupConvo()
         context['StarGroupConvo'] = starForm
+
+        # isMatch = False
+        # for user in UserWrapper.objects.all():
+        #     if user.user.id == request.user.id: #getting correct user
+        #         for convo in user.starredGroupConvos:
+        #             if convo.GroupId == val:   #getting correct ConvoPreview
+        #                 isMatch = True
+        #                 convoToRemove = convo
+        #                 break
+        #
         # print(slug_url_kwarg)
         return context
 
@@ -65,9 +77,29 @@ class Messages(TemplateView):
                     message.delete()
         deleteForm = DeleteMessage()
 
+
         starForm = StarGroupConvo(request.POST)
         if starForm.is_valid():
-            print('hi')
+            val = starForm.cleaned_data.get("star")
+            isunStarred = False
+            for user in UserWrapper.objects.all():
+                if user.user.id == request.user.id: #getting correct user
+                    for convo in user.starredGroupConvos.all():
+                        if str(convo.GroupId) == val:   #getting correct ConvoPreview
+                            isunStarred = True
+                            convoToRemove = convo
+                            break
+            if isunStarred:
+                user.starredGroupConvos.remove(convoToRemove)
+            else:
+                for convo in ConvoPreview.objects.all():
+                    if str(convo.GroupId) == val: #getting correct ConvoPreview
+                        for user in UserWrapper.objects.all():
+                            if user.user.id == request.user.id: #getting correct user
+                                user.starredGroupConvos.add(convo)
+                                break
+
+
         starForm = DeleteMessage()
 
         postForm = NewPostForm(request.POST)
@@ -89,6 +121,7 @@ class Messages(TemplateView):
         context['NewPostForm'] = postForm
         context['DeleteMessage'] = deleteForm
         context['StarGroupConvo'] = starForm
+        context['starred'] = not isunStarred
         return render(request, "./social_app/Messages.html",context)
 
 class registration(TemplateView):

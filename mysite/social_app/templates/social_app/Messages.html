@@ -30,10 +30,16 @@
 
           <li><a href="../../">
             <form method="POST">
-               {% csrf_token %}
-               {{starForm.as_p}}
-
-               <button type="submit">DeleteMessage</button>
+              {% csrf_token %}
+              {{starForm.as_p}}
+              <input type="hidden" name="star" value="{{GroupConvoID}}">
+              <button type="submit">
+                {% if starred  %}
+                  <img src="/media/colored_star.png"/>
+                {% else %}
+                  <img src="/media/uncolored_star.png"/>
+                {% endif %}
+              </button>
             </form>
           </a></li>
 

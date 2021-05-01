@@ -82,8 +82,12 @@ class Messages(TemplateView):
         if starForm.is_valid():
             val = starForm.cleaned_data.get("star")
             isunStarred = False
+            print("what")
             for user in UserWrapper.objects.all():
-                if user.user.id == request.user.id: #getting correct user
+                print("hi")
+                print(request.user)
+                if user.user.id == request.user: #getting correct user
+                    print(request.user)
                     for convo in user.starredGroupConvos.all():
                         if str(convo.GroupId) == val:   #getting correct ConvoPreview
                             isunStarred = True
@@ -134,20 +138,21 @@ class registration(TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            if SignUpForm.is_valid():
-                user = form.save()
-                user.refresh_from_db()
-                user.save()
-                password = SignUpForm.cleaned_data.get('password1')
-                email = SignUpForm.cleaned_data.get('email')
-                username = SignUpForm.cleaned_data.get('username')
-                user = authenticate(username=username,
-                                     email=email,
-                                     password=password)
-                UserWrapper.objects.create(user = user)
-                login(request, user)
-                return redirect('../')
-            else:
-                SignUpForm = SignUpForm()
-        return render(request, './registration/registration.html', {'SignUpForm': SignUpForm})
+        signUpForm = SignUpForm(request.POST)
+        if signUpForm.is_valid():
+            user = signUpForm.save()
+            user.refresh_from_db()
+            user.save()
+            password = signUpForm.cleaned_data.get('password1')
+            email = signUpForm.cleaned_data.get('email')
+            username = signUpForm.cleaned_data.get('username')
+            user = authenticate(username=username,
+                                 email=email,
+                                 password=password)
+            UserWrapper.objects.create(user = user)
+            login(request, user)
+            return redirect('../')
+        else:
+            signUpForm = SignUpForm()
+
+        return render(request, './registration/registration.html', {'SignUpForm': signUpForm})

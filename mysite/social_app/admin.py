@@ -1,9 +1,11 @@
 from django.contrib import admin
 
-from .models import UserMessage, ConvoPreview
+from .models import UserMessage, ConvoPreview, UserWrapper
 
 admin.site.register(UserMessage)
 admin.site.register(ConvoPreview)
+admin.site.register(UserWrapper)
+
 #
 # class ChoiceInline(admin.TabularInline):
 #     model = Choice

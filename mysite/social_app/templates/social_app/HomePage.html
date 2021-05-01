@@ -16,7 +16,7 @@
 
   </head>
   <body bgcolor="#111144">
-    <nav class="navbar navbar-inverse">
+    <nav class="navbar navbar-inverse sticky-top bg-dark">
       <div class="container-fluid">
         <div class="navbar-header">
           <a class="navbar-brand" href="#">Discourse</a>
@@ -28,7 +28,11 @@
               <p><a href="{% url 'social_app:logout' %}?next={{request.path}}">Log Out</a></p>
             {% else %}
               <p>You are not logged in</p>
-              <a href="{% url 'social_app:login' %}?next={{request.path}}">Log In</a>
+              <p><span>
+                <a href="{% url 'social_app:login' %}?next={{request.path}}">Log In</a>
+                or
+                <a href="{% url 'social_app:registration' %}?next={{request.path}}">Register</a>
+              </span></p>
             {% endif %}</li>
           <!-- add a personalized page -->
         </ul>

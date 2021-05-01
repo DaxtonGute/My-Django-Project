@@ -2,16 +2,13 @@ from django.db import models
 import datetime
 from django.utils import timezone
 from django.db.models.signals import post_save
+from django.contrib.postgres.fields import ArrayField
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 
-class UserProfile(models.Model):
-    username = models.CharField(max_length=150)
-    email = models.EmailField(max_length=150)
-    password = models.CharField(max_length=150)
-
-    def __str__(self):
-        return self.username
+class UserWrapper(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True,)
+    starredGroupConvos = models.ManyToManyField('social_app.ConvoPreview', blank=True)
 
 
 # @receiver(post_save, sender=UserProfile)

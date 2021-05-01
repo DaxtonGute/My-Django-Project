@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
   <head>
     <title>Messages</title>
 
@@ -20,14 +19,29 @@
     <nav class="navbar navbar-inverse sticky-top bg-dark">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="../../">Discourse</a>
+          <!-- better way to do this -->
+          {% for groupConvo in ConvoPreview %}
+            {% if groupConvo.GroupId|slugify == GroupConvoID %}
+              <a class="navbar-brand" href="../../">Discourse - {{groupConvo.Group_Name}}</a>
+            {% endif %}
+          {% endfor %}
         </div>
         <ul class="nav navbar-nav">
-          <li><a href="../../"></a></li>
+
+          <li><a href="../../">
+            <form method="POST">
+               {% csrf_token %}
+               {{starForm.as_p}}
+
+               <button type="submit">DeleteMessage</button>
+            </form>
+          </a></li>
+
           <!-- add a personalized page -->
         </ul>
       </div>
     </nav>
+
 
 
     {% for message in UserMessage %}
@@ -40,7 +54,7 @@
           <form method="POST">
              {% csrf_token %}
              {{deleteForm.as_p}}
-             <input type="hidden" name="btn" value="{{message}}">
+             <input type="hidden" name="deleteBtn" value="{{message}}">
              <button type="submit">DeleteMessage</button>
           </form>
         {% endif %}

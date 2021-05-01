@@ -4,9 +4,8 @@ from django.views.generic import TemplateView
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login
 
-from .models import ConvoPreview
-from .models import UserMessage, UserProfile
-from .forms import NewPostForm, SignUpForm, DeleteMessage
+from .models import ConvoPreview, UserMessage, UserWrapper
+from .forms import NewPostForm, SignUpForm, DeleteMessage, StarGroupConvo
 import datetime
 
 class HomePage(TemplateView):
@@ -49,6 +48,8 @@ class Messages(TemplateView):
         context['NewPostForm'] = postForm
         deleteForm = DeleteMessage()
         context['DeleteMessage'] = deleteForm
+        starForm = StarGroupConvo()
+        context['StarGroupConvo'] = starForm
         # print(slug_url_kwarg)
         return context
 
@@ -58,14 +59,16 @@ class Messages(TemplateView):
 
         deleteForm = DeleteMessage(request.POST)
         if deleteForm.is_valid():
-            val = deleteForm.cleaned_data.get("btn")
-
-            print(val)
+            val = deleteForm.cleaned_data.get("deleteBtn")
             for message in UserMessage.objects.all():
-                print(message)
                 if str(message) == str(val):
                     message.delete()
             deleteForm = DeleteMessage()
+
+        starForm = StarGroupConvo(request.POST)
+        if starForm.is_valid():
+            print('hi')
+            starForm = DeleteMessage()
 
         postForm = NewPostForm(request.POST)
         if postForm.is_valid():
@@ -81,10 +84,10 @@ class Messages(TemplateView):
         context = super(Messages, self).get_context_data(*args,**kwargs)
         context['UserMessage'] = UserMessage.objects.all()
         context['ConvoPreview'] = ConvoPreview.objects.all()
-        postForm = NewPostForm()
+        context['UserWrapper'] = UserWrapper.objects.all()
         context['NewPostForm'] = postForm
-        deleteForm = DeleteMessage()
         context['DeleteMessage'] = deleteForm
+        context['StarGroupConvo'] = starForm
         return render(request, "./social_app/Messages.html",context)
 
 class registration(TemplateView):
@@ -92,8 +95,8 @@ class registration(TemplateView):
 
     def get_context_data(self,*args, **kwargs):
         context = super(registration, self).get_context_data(*args,**kwargs)
-        SignUpForm = SignUpForm()
-        context['SignUpForm'] = SignUpForm
+        signUpForm = SignUpForm()
+        context['SignUpForm'] = signUpForm
         return context
 
     def post(self, request, *args, **kwargs):
@@ -108,6 +111,7 @@ class registration(TemplateView):
                 user = authenticate(username=username,
                                      email=email,
                                      password=password)
+                UserWrapper.objects.create(user = user)
                 login(request, user)
                 return redirect('../')
             else:

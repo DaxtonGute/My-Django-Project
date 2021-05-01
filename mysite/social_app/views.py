@@ -63,12 +63,12 @@ class Messages(TemplateView):
             for message in UserMessage.objects.all():
                 if str(message) == str(val):
                     message.delete()
-            deleteForm = DeleteMessage()
+        deleteForm = DeleteMessage()
 
         starForm = StarGroupConvo(request.POST)
         if starForm.is_valid():
             print('hi')
-            starForm = DeleteMessage()
+        starForm = DeleteMessage()
 
         postForm = NewPostForm(request.POST)
         if postForm.is_valid():
@@ -80,6 +80,7 @@ class Messages(TemplateView):
             for Convo in ConvoPreview.objects.all():
                  if str(Convo.GroupId) == GroupConvoID:
                     NewMessage = UserMessage.objects.create(Message_Text = Message, Time_Stamp = Date, Author = Author, GroupConvo = Convo)
+        postForm = NewPostForm()
 
         context = super(Messages, self).get_context_data(*args,**kwargs)
         context['UserMessage'] = UserMessage.objects.all()

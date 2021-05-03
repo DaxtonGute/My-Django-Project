@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import UserMessage, ConvoPreview, UserWrapper
+from .models import UserMessage, ConvoPreview, Post_Likes
 
 admin.site.register(UserMessage)
 admin.site.register(ConvoPreview)
-admin.site.register(UserWrapper)
+admin.site.register(Post_Likes)
 
 #
 # class ChoiceInline(admin.TabularInline):

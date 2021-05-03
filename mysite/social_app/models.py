@@ -6,16 +6,6 @@ from django.contrib.postgres.fields import ArrayField
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 
-class UserWrapper(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True,)
-    starredGroupConvos = models.ManyToManyField('social_app.ConvoPreview', blank=True)
-
-
-# @receiver(post_save, sender=UserProfile)
-# def update_user_profile(sender, instance, created, **kwargs):
-#     if created:
-#         UserProfile.objects.create(user=instance)
-#     instance.UserProfile.save()
 
 class ConvoPreview(models.Model):
     Group_Name = models.CharField(max_length=200, default="DEFAULT_GROUP")
@@ -25,6 +15,20 @@ class ConvoPreview(models.Model):
     def __str__(self):
         groupid = "GROUP ("+str(self.GroupId) +")"
         return groupid
+
+    @property
+    def view_count(self):
+        return PostLikes.objects.filter(post=self).count()
+
+class Post_Likes(models.Model):
+     user = models.ForeignKey(User, on_delete=models.CASCADE)
+     post = models.ForeignKey(ConvoPreview, on_delete=models.CASCADE)
+
+# @receiver(post_save, sender=UserProfile)
+# def update_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         UserProfile.objects.create(user=instance)
+#     instance.UserProfile.save()
 
 class UserMessage(models.Model):
     Message_Text = models.CharField(max_length=200, default="DEFAULT_MESSAGE")

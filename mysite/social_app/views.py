@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login
 
-from .models import ConvoPreview, UserMessage, UserWrapper
+from .models import ConvoPreview, UserMessage, Post_Likes
 from .forms import NewPostForm, SignUpForm, DeleteMessage, StarGroupConvo
 import datetime
 
@@ -45,7 +45,7 @@ class Messages(TemplateView):
         context = super(Messages, self).get_context_data(*args,**kwargs)
         context['UserMessage'] = UserMessage.objects.all()
         context['ConvoPreview'] = ConvoPreview.objects.all()
-        context['UserWrapper'] = UserWrapper.objects.all()
+        context['Post_Likes'] = Post_Likes.objects.all()
         postForm = NewPostForm()
         context['NewPostForm'] = postForm
         deleteForm = DeleteMessage()
@@ -54,7 +54,7 @@ class Messages(TemplateView):
         context['StarGroupConvo'] = starForm
 
         # isMatch = False
-        # for user in UserWrapper.objects.all():
+        # for user in Post_Likes.objects.all():
         #     if user.user.id == request.user.id: #getting correct user
         #         for convo in user.starredGroupConvos:
         #             if convo.GroupId == val:   #getting correct ConvoPreview
@@ -77,31 +77,16 @@ class Messages(TemplateView):
                     message.delete()
         deleteForm = DeleteMessage()
 
-
-        starForm = StarGroupConvo(request.POST)
-        if starForm.is_valid():
-            val = starForm.cleaned_data.get("star")
-            isunStarred = False
-            print("what")
-            for user in UserWrapper.objects.all():
-                print("hi")
-                print(request.user)
-                if user.user.id == request.user: #getting correct user
-                    print(request.user)
-                    for convo in user.starredGroupConvos.all():
-                        if str(convo.GroupId) == val:   #getting correct ConvoPreview
-                            isunStarred = True
-                            convoToRemove = convo
-                            break
-            if isunStarred:
-                user.starredGroupConvos.remove(convoToRemove)
+        starGroupConvo = StarGroupConvo(request.POST)
+        if starGroupConvo.is_valid():
+            post = ConvoPreview.objects.get(GroupId=GroupConvoID)
+            number_of_likes = Post_Likes.objects.filter(user=request.user, post=post).count()
+            if number_of_likes > 0:
+                already_liked = True # pass this variable to your context
+                Post_Likes.objects.filter(user=request.user, post=post).delete()
             else:
-                for convo in ConvoPreview.objects.all():
-                    if str(convo.GroupId) == val: #getting correct ConvoPreview
-                        for user in UserWrapper.objects.all():
-                            if user.user.id == request.user.id: #getting correct user
-                                user.starredGroupConvos.add(convo)
-                                break
+                already_liked = False # you can make this anything other than boolean
+                new_like, created = Post_Likes.objects.get_or_create(user=request.user, post=post)
 
 
         starForm = DeleteMessage()
@@ -121,11 +106,11 @@ class Messages(TemplateView):
         context = super(Messages, self).get_context_data(*args,**kwargs)
         context['UserMessage'] = UserMessage.objects.all()
         context['ConvoPreview'] = ConvoPreview.objects.all()
-        context['UserWrapper'] = UserWrapper.objects.all()
+        context['Post_Likes'] = Post_Likes.objects.all()
         context['NewPostForm'] = postForm
         context['DeleteMessage'] = deleteForm
         context['StarGroupConvo'] = starForm
-        context['starred'] = not isunStarred
+        context['starred'] = not already_liked
         return render(request, "./social_app/Messages.html",context)
 
 class registration(TemplateView):
@@ -149,7 +134,7 @@ class registration(TemplateView):
             user = authenticate(username=username,
                                  email=email,
                                  password=password)
-            UserWrapper.objects.create(user = user)
+            Post_Likes.objects.create(user = user)
             login(request, user)
             return redirect('../')
         else:

@@ -33,11 +33,11 @@
                 {% csrf_token %}
                 {{starForm.as_p}}
                 <input type="hidden" name="star" value="{{GroupConvoID}}">
-                <button type="submit">
+                <button type="submit" style="background-color: transparent; border:none">
                   {% if starred %}
-                    <img src="/media/colored_star.png"/>
+                    <img src="/media/colored_star.png" style="width:50px"/>
                   {% else %}
-                    <img src="/media/uncolored_star.png"/>
+                    <img src="/media/uncolored_star.png" style="width:50px"/>
                   {% endif %}
                 </button>
               </form>

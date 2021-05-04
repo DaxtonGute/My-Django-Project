@@ -60,8 +60,7 @@ class Messages(TemplateView):
     model = UserMessage
     slug_url_kwarg = 'GroupConvoID'
 
-    def get_context_data(self,*args, **kwargs):
-        print(*args)
+    def get_context_data(self, *args, **kwargs):
         context = super(Messages, self).get_context_data(*args,**kwargs)
         context['UserMessage'] = UserMessage.objects.all()
         context['ConvoPreview'] = ConvoPreview.objects.all()
@@ -72,6 +71,7 @@ class Messages(TemplateView):
         context['DeleteMessage'] = deleteForm
         starForm = StarGroupConvo()
         context['StarGroupConvo'] = starForm
+        return context
 
 
         # isMatch = False

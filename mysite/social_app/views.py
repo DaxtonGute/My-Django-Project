@@ -16,6 +16,26 @@ class HomePage(TemplateView):
         context['ConvoPreview'] = ConvoPreview.objects.all()
         return context
 
+    def post(self, request, *args, **kwargs):
+
+        starGroupConvo = StarGroupConvo(request.POST)
+        if starGroupConvo.is_valid():
+            GroupConvoID = starGroupConvo.cleaned_data['star']
+            post = ConvoPreview.objects.get(GroupId=GroupConvoID)
+            number_of_likes = Post_Likes.objects.filter(user=request.user, post=post).count()
+            if number_of_likes > 0:
+                already_liked = True # pass this variable to your context
+                Post_Likes.objects.filter(user=request.user, post=post).delete()
+            else:
+                already_liked = False # you can make this anything other than boolean
+                new_like, created = Post_Likes.objects.get_or_create(user=request.user, post=post)
+        starGroupConvo = StarGroupConvo()
+
+        context = super(HomePage, self).get_context_data(*args,**kwargs)
+        context['StarGroupConvo'] = starGroupConvo
+        context['starred'] = not already_liked
+        context['ConvoPreview'] = ConvoPreview.objects.all()
+        return render(request, "./social_app/HomePage.html",context)
     #def get_queryset(self):
         # context = {'isGuest': isGuest,
         #            'ConvoPreview': ConvoPreview.objects}
@@ -53,6 +73,7 @@ class Messages(TemplateView):
         starForm = StarGroupConvo()
         context['StarGroupConvo'] = starForm
 
+
         # isMatch = False
         # for user in Post_Likes.objects.all():
         #     if user.user.id == request.user.id: #getting correct user
@@ -63,7 +84,6 @@ class Messages(TemplateView):
         #                 break
         #
         # print(slug_url_kwarg)
-        return context
 
     def post(self, request, *args, **kwargs):
         for key, value in kwargs.items():
@@ -87,9 +107,7 @@ class Messages(TemplateView):
             else:
                 already_liked = False # you can make this anything other than boolean
                 new_like, created = Post_Likes.objects.get_or_create(user=request.user, post=post)
-
-
-        starForm = DeleteMessage()
+        starGroupConvo = StarGroupConvo()
 
         postForm = NewPostForm(request.POST)
         if postForm.is_valid():
@@ -109,7 +127,7 @@ class Messages(TemplateView):
         context['Post_Likes'] = Post_Likes.objects.all()
         context['NewPostForm'] = postForm
         context['DeleteMessage'] = deleteForm
-        context['StarGroupConvo'] = starForm
+        context['StarGroupConvo'] = starGroupConvo
         context['starred'] = not already_liked
         return render(request, "./social_app/Messages.html",context)
 

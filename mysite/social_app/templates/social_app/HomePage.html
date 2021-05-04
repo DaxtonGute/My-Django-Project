@@ -41,9 +41,32 @@
 
     {% for groupConvo in ConvoPreview %}
       <div class="media border p-3">
-        <h1>{{groupConvo.Group_Name}}</h1>
-        <img src="{{groupConvo.Thumbnail.url}}" class="mr-3 mt-7 rounded-circle" style="width:100px;"/>
-        <a href="./messages/{{groupConvo.GroupId}}"> linkie </a>
+        <div class="container">
+          <div class="col-sm">
+            <h1>{{groupConvo.Group_Name}}</h1>
+            <img src="{{groupConvo.Thumbnail.url}}" class="mr-3 mt-7 rounded-circle" style="width:100px;"/>
+            <a href="./messages/{{groupConvo.GroupId}}"> linkie </a>
+          </div>
+          <div class="col-sm">
+          </div>
+
+          <div class="col-sm">
+            <p> Likes: {{groupConvo.view_count}} </p>
+            <form method="POST">
+              {% csrf_token %}
+              {{starForm.as_p}}
+              <input type="hidden" name="star" value="{{groupConvo.GroupId}}">
+              <button type="submit" style="background-color: transparent; border:none">
+                {% if starred %}
+                  <img src="/media/colored_star.png" style="width:20px"/>
+                {% else %}
+                  <img src="/media/uncolored_star.png" style="width:20px"/>
+                {% endif %}
+              </button>
+            </form>
+          </div>
+
+        </div>
       </div>
     {% endfor %}
 

@@ -18,7 +18,7 @@ class ConvoPreview(models.Model):
 
     @property
     def view_count(self):
-        return PostLikes.objects.filter(post=self).count()
+        return Post_Likes.objects.filter(post=self).count()
 
 class Post_Likes(models.Model):
      user = models.ForeignKey(User, on_delete=models.CASCADE)

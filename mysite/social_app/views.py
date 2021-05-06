@@ -12,12 +12,20 @@ class HomePage(TemplateView):
     template_name = "./social_app/HomePage.html"
     model = ConvoPreview
     def get_context_data(self,*args, **kwargs):
+        dictionary = {}
+        for groupConvo in ConvoPreview.objects.all():
+            for postLike in Post_Likes.objects.all():
+                if postLike.user == self.request.user and postLike.post == groupConvo:
+                    dictionary[groupConvo.GroupId] = True
+            if dictionary.get(groupConvo.GroupId) is None:
+                dictionary[groupConvo.GroupId] = False
+
         context = super(HomePage, self).get_context_data(*args,**kwargs)
+        context['Dictionary'] = dictionary.copy()
         context['ConvoPreview'] = ConvoPreview.objects.all()
         return context
 
     def post(self, request, *args, **kwargs):
-
         starGroupConvo = StarGroupConvo(request.POST)
         if starGroupConvo.is_valid():
             GroupConvoID = starGroupConvo.cleaned_data['star']
@@ -31,10 +39,20 @@ class HomePage(TemplateView):
                 new_like, created = Post_Likes.objects.get_or_create(user=request.user, post=post)
         starGroupConvo = StarGroupConvo()
 
+        dictionary = {}
+        for groupConvo in ConvoPreview.objects.all():
+            for postLike in Post_Likes.objects.all():
+                if postLike.user == request.user and postLike.post == groupConvo:
+                    dictionary[groupConvo.GroupId] = True
+            if dictionary.get(groupConvo.GroupId) is None:
+                dictionary[groupConvo.GroupId] = False
+
+
         context = super(HomePage, self).get_context_data(*args,**kwargs)
         context['StarGroupConvo'] = starGroupConvo
-        context['starred'] = not already_liked
+        context['Post_Likes'] = Post_Likes.objects.all()
         context['ConvoPreview'] = ConvoPreview.objects.all()
+        context['Dictionary'] = dictionary
         return render(request, "./social_app/HomePage.html",context)
     #def get_queryset(self):
         # context = {'isGuest': isGuest,

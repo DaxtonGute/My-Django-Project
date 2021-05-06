@@ -39,7 +39,9 @@
       </div>
     </nav>
 
+    
     {% for groupConvo in ConvoPreview %}
+
       <div class="media border p-3">
         <div class="container">
           <div class="col-sm">
@@ -56,13 +58,19 @@
               {% csrf_token %}
               {{starForm.as_p}}
               <input type="hidden" name="star" value="{{groupConvo.GroupId}}">
-              <button type="submit" style="background-color: transparent; border:none">
-                {% if starred %}
-                  <img src="/media/colored_star.png" style="width:20px"/>
-                {% else %}
-                  <img src="/media/uncolored_star.png" style="width:20px"/>
+              {% for key, values in Dictionary.items %}
+                {% if key == groupConvo.GroupId %}
+                  {% if values %}
+                    <button type="submit" style="background-color: transparent; border:none">
+                      <img src="/media/colored_star.png" style="width:20px"/>
+                    </button>
+                  {% else %}
+                  <button type="submit" style="background-color: transparent; border:none">
+                    <img src="/media/uncolored_star.png" style="width:20px"/>
+                  </button>
+                  {% endif %}
                 {% endif %}
-              </button>
+              {% endfor %}
             </form>
           </div>
 

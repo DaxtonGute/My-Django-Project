@@ -62,11 +62,11 @@
               {% for key, values in Dictionary.items %}
                 {% if key == groupConvo.GroupId %}
                   {% if values %}
-                    <button type="submit" style="background-color: transparent; border:none" name="starred">
+                    <button type="submit" style="background-color: transparent; border:none">
                       <img src="/media/colored_star.png" style="width:20px"/>
                     </button>
                   {% else %}
-                    <button type="submit" style="background-color: transparent; border:none" name="unstarrred">
+                    <button type="submit" style="background-color: transparent; border:none">
                       <img src="/media/uncolored_star.png" style="width:20px"/>
                     </button>
                   {% endif %}
@@ -83,7 +83,7 @@
     <form method="POST">
       {% csrf_token %}
       {{NewConvoForm.as_p}}
-      <button type="submit" style="" name="newConvo"> New Group Conversation </button>
+      <button type="submit" style=""> New Group Conversation </button>
     </form>
 
 

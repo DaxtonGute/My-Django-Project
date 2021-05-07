@@ -31,7 +31,8 @@ class HomePage(TemplateView):
 
     def post(self, request, *args, **kwargs):
         starGroupConvo = StarGroupConvo(request.POST)
-        if starGroupConvo.is_valid():
+        if starGroupConvo.is_valid() and starGroupConvo.cleaned_data['star'] != "":
+            print(request.POST)
             GroupConvoID = starGroupConvo.cleaned_data['star']
             post = ConvoPreview.objects.get(GroupId=GroupConvoID)
             number_of_likes = Post_Likes.objects.filter(user=request.user, post=post).count()

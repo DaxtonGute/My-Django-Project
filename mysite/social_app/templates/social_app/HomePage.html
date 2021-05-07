@@ -39,7 +39,7 @@
       </div>
     </nav>
 
-    
+
     {% for groupConvo in ConvoPreview %}
 
       <div class="media border p-3">
@@ -47,6 +47,7 @@
           <div class="col-sm">
             <h1>{{groupConvo.Group_Name}}</h1>
             <img src="{{groupConvo.Thumbnail.url}}" class="mr-3 mt-7 rounded-circle" style="width:100px;"/>
+            <p> {{groupConvo.Description}} </p>
             <a href="./messages/{{groupConvo.GroupId}}"> linkie </a>
           </div>
           <div class="col-sm">
@@ -77,6 +78,15 @@
         </div>
       </div>
     {% endfor %}
+
+    
+    <form method="POST">
+      {% csrf_token %}
+      {{NewConvoForm.as_p}}
+      <input type="hidden" name="star" value="">
+      <button type="submit" style=""> New Group Conversation </button>
+    </form>
+
 
   </body>
 </html

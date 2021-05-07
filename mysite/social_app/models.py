@@ -10,7 +10,8 @@ from django.contrib.auth.models import User
 class ConvoPreview(models.Model):
     Group_Name = models.CharField(max_length=200, default="DEFAULT_GROUP")
     Thumbnail = models.ImageField(upload_to ='uploads/', default='/404.png')
-    GroupId = models.AutoField(primary_key=True, unique=True)
+    GroupId = models.IntegerField(unique=True)
+    Description = models.CharField(max_length=500, default="DEFAULT_DESCRIPTION")
 
     def __str__(self):
         groupid = "GROUP ("+str(self.GroupId) +")"

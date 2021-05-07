@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login
 
 from .models import ConvoPreview, UserMessage, Post_Likes
-from .forms import NewPostForm, SignUpForm, DeleteMessage, StarGroupConvo
+from .forms import NewPostForm, NewConvoForm, SignUpForm, DeleteMessage, StarGroupConvo
 import datetime
 
 class HomePage(TemplateView):
@@ -21,6 +21,10 @@ class HomePage(TemplateView):
                 dictionary[groupConvo.GroupId] = False
 
         context = super(HomePage, self).get_context_data(*args,**kwargs)
+        starGroupConvo = StarGroupConvo()
+        context['StarGroupConvo'] = starGroupConvo
+        convoForm = NewConvoForm()
+        context['NewConvoForm'] = convoForm
         context['Dictionary'] = dictionary.copy()
         context['ConvoPreview'] = ConvoPreview.objects.all()
         return context
@@ -47,9 +51,20 @@ class HomePage(TemplateView):
             if dictionary.get(groupConvo.GroupId) is None:
                 dictionary[groupConvo.GroupId] = False
 
+        convoForm = NewConvoForm(request.POST)
+        if convoForm.is_valid():
+            Title = convoForm.cleaned_data['Title']
+            Description = convoForm.cleaned_data['Description']
+            Thumbnail = convoForm.cleaned_data['Thumbnail']
+            GroupId = ConvoPreview.objects.count()
+            # args = {'Message': Message, 'Date': Date, 'Author': Author, 'Convo': Convo}
+            NewConvo = ConvoPreview.objects.create(Group_Name = Title, Thumbnail = Thumbnail, Description = Description, GroupId = GroupId)
+        convoForm = NewConvoForm()
+
 
         context = super(HomePage, self).get_context_data(*args,**kwargs)
         context['StarGroupConvo'] = starGroupConvo
+        context['NewConvoForm'] = convoForm
         context['Post_Likes'] = Post_Likes.objects.all()
         context['ConvoPreview'] = ConvoPreview.objects.all()
         context['Dictionary'] = dictionary

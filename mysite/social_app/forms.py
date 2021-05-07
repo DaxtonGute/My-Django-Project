@@ -14,6 +14,11 @@ class SignUpForm(UserCreationForm):
 class NewPostForm(forms.Form):
     Message = forms.CharField(label='Post Message')
 
+class NewConvoForm(forms.Form):
+    Title = forms.CharField(label='Title')
+    Description = forms.CharField(label='Description')
+    Thumbnail = forms.ImageField(label='Thumbnail')
+
 class DeleteMessage(forms.Form):
      deleteBtn = forms.CharField(required = False)
 

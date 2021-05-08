@@ -12,20 +12,20 @@ class HomePage(TemplateView):
     template_name = "./social_app/HomePage.html"
     model = ConvoPreview
     def get_context_data(self,*args, **kwargs):
-        dictionary = {}
+        dictionaryOfLikes = {}
         for groupConvo in ConvoPreview.objects.all():
             for postLike in Post_Likes.objects.all():
                 if postLike.user == self.request.user and postLike.post == groupConvo:
-                    dictionary[groupConvo.GroupId] = True
-            if dictionary.get(groupConvo.GroupId) is None:
-                dictionary[groupConvo.GroupId] = False
+                    dictionaryOfLikes[groupConvo.GroupId] = True
+            if dictionaryOfLikes.get(groupConvo.GroupId) is None:
+                dictionaryOfLikes[groupConvo.GroupId] = False
 
         context = super(HomePage, self).get_context_data(*args,**kwargs)
         starGroupConvo = StarGroupConvo()
         context['StarGroupConvo'] = starGroupConvo
         convoForm = NewConvoForm()
         context['NewConvoForm'] = convoForm
-        context['Dictionary'] = dictionary.copy()
+        context['Dictionary'] = dictionaryOfLikes.copy()
         context['ConvoPreview'] = ConvoPreview.objects.all()
         return context
 
@@ -43,13 +43,18 @@ class HomePage(TemplateView):
                 new_like, created = Post_Likes.objects.get_or_create(user=request.user, post=post)
         starGroupConvo = StarGroupConvo()
 
-        dictionary = {}
+        dictionaryOfLikes = {}
         for groupConvo in ConvoPreview.objects.all():
             for postLike in Post_Likes.objects.all():
                 if postLike.user == request.user and postLike.post == groupConvo:
-                    dictionary[groupConvo.GroupId] = True
-            if dictionary.get(groupConvo.GroupId) is None:
-                dictionary[groupConvo.GroupId] = False
+                    dictionaryOfLikes[groupConvo.GroupId] = True
+            if dictionaryOfLikes.get(groupConvo.GroupId) is None:
+                dictionaryOfLikes[groupConvo.GroupId] = False
+
+        favorites = []
+        for postLike in Post_Likes.objects.all():
+            if postLike.user == request.user:
+                favorites.append(postLike)
 
         convoForm = NewConvoForm(request.POST)
         if convoForm.is_valid():
@@ -67,7 +72,8 @@ class HomePage(TemplateView):
         context['NewConvoForm'] = convoForm
         context['Post_Likes'] = Post_Likes.objects.all()
         context['ConvoPreview'] = ConvoPreview.objects.all()
-        context['Dictionary'] = dictionary
+        context['Dictionary'] = dictionaryOfLikes
+        context['favorites'] = favorites
         return render(request, "./social_app/HomePage.html",context)
     #def get_queryset(self):
         # context = {'isGuest': isGuest,
@@ -94,6 +100,16 @@ class Messages(TemplateView):
     slug_url_kwarg = 'GroupConvoID'
 
     def get_context_data(self, *args, **kwargs):
+        for key, value in kwargs.items():
+            GroupConvoID = value #since there is only one
+
+        post = ConvoPreview.objects.get(GroupId=GroupConvoID)
+        number_of_likes = Post_Likes.objects.filter(user=self.request.user, post=post).count()
+        if number_of_likes > 0:
+            already_liked = True # pass this variable to your context
+        else:
+            already_liked = False # you can make this anything other than boolean
+
         context = super(Messages, self).get_context_data(*args,**kwargs)
         context['UserMessage'] = UserMessage.objects.all()
         context['ConvoPreview'] = ConvoPreview.objects.all()
@@ -104,6 +120,7 @@ class Messages(TemplateView):
         context['DeleteMessage'] = deleteForm
         starForm = StarGroupConvo()
         context['StarGroupConvo'] = starForm
+        context['starred'] = already_liked
         return context
 
 

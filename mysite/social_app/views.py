@@ -20,12 +20,18 @@ class HomePage(TemplateView):
             if dictionaryOfLikes.get(groupConvo.GroupId) is None:
                 dictionaryOfLikes[groupConvo.GroupId] = False
 
+        favorites = []
+        for postLike in Post_Likes.objects.all():
+            if postLike.user == self.request.user:
+                favorites.append(postLike)
+
         context = super(HomePage, self).get_context_data(*args,**kwargs)
         starGroupConvo = StarGroupConvo()
         context['StarGroupConvo'] = starGroupConvo
         convoForm = NewConvoForm()
         context['NewConvoForm'] = convoForm
         context['Dictionary'] = dictionaryOfLikes.copy()
+        context['favorites'] = favorites
         context['ConvoPreview'] = ConvoPreview.objects.all()
         return context
 

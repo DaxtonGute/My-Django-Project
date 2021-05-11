@@ -66,6 +66,7 @@
             <p> Likes: {{groupConvo.view_count}} </p>
             <form method="POST">
               {% csrf_token %}
+              {{starForm.as_p}}
               <input type="hidden" name="star" value="{{groupConvo.GroupId}}">
               {% for key, values in Dictionary.items %}
                 {% if key == groupConvo.GroupId %}

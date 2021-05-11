@@ -51,6 +51,18 @@ class HomePage(TemplateView):
                 new_like, created = Post_Likes.objects.get_or_create(user=request.user, post=post)
         starGroupConvo = StarGroupConvo()
 
+        convoForm = NewConvoForm(request.POST, request.FILES)
+        if convoForm.is_valid():
+            Title = convoForm.cleaned_data['Title']
+            Description = convoForm.cleaned_data['Description']
+            Thumbnail = convoForm.cleaned_data['Thumbnail']
+            GroupId = ConvoPreview.objects.count()
+            # args = {'Message': Message, 'Date': Date, 'Author': Author, 'Convo': Convo}
+            print(Thumbnail)
+            NewConvo = ConvoPreview.objects.create(Group_Name = Title, Thumbnail = Thumbnail, Description = Description, GroupId = GroupId)
+        convoForm = NewConvoForm()
+
+        
         if not self.request.user.is_anonymous:
             dictionaryOfLikes = {}
             for groupConvo in ConvoPreview.objects.all():
@@ -61,23 +73,10 @@ class HomePage(TemplateView):
                     dictionaryOfLikes[groupConvo.GroupId] = False
             context['Dictionary'] = dictionaryOfLikes
 
-
         favorites = []
         for postLike in Post_Likes.objects.all():
             if postLike.user == request.user:
                 favorites.append(postLike)
-
-        convoForm = NewConvoForm(request.POST, request.FILES)
-        print(convoForm.is_valid())
-        if convoForm.is_valid():
-            Title = convoForm.cleaned_data['Title']
-            Description = convoForm.cleaned_data['Description']
-            Thumbnail = convoForm.cleaned_data['Thumbnail']
-            GroupId = ConvoPreview.objects.count()
-            # args = {'Message': Message, 'Date': Date, 'Author': Author, 'Convo': Convo}
-            print(Thumbnail)
-            NewConvo = ConvoPreview.objects.create(Group_Name = Title, Thumbnail = Thumbnail, Description = Description, GroupId = GroupId)
-        convoForm = NewConvoForm()
 
 
         context['StarGroupConvo'] = starGroupConvo

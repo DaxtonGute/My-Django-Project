@@ -67,13 +67,15 @@ class HomePage(TemplateView):
             if postLike.user == request.user:
                 favorites.append(postLike)
 
-        convoForm = NewConvoForm(request.POST)
+        convoForm = NewConvoForm(request.POST, request.FILES)
+        print(convoForm.is_valid())
         if convoForm.is_valid():
-            Title = convoForm.cleaned_data['Group_Name']
+            Title = convoForm.cleaned_data['Title']
             Description = convoForm.cleaned_data['Description']
             Thumbnail = convoForm.cleaned_data['Thumbnail']
             GroupId = ConvoPreview.objects.count()
             # args = {'Message': Message, 'Date': Date, 'Author': Author, 'Convo': Convo}
+            print(Thumbnail)
             NewConvo = ConvoPreview.objects.create(Group_Name = Title, Thumbnail = Thumbnail, Description = Description, GroupId = GroupId)
         convoForm = NewConvoForm()
 
@@ -175,7 +177,7 @@ class Messages(TemplateView):
         if postForm.is_valid():
             Message = postForm.cleaned_data['Message']
             Author = request.user
-            Date = datetime.date.today()
+            Date = datetime.datetime.today()
             postForm = NewPostForm()
             # args = {'Message': Message, 'Date': Date, 'Author': Author, 'Convo': Convo}
             for Convo in ConvoPreview.objects.all():

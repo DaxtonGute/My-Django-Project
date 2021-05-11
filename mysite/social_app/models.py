@@ -33,7 +33,7 @@ class Post_Likes(models.Model):
 
 class UserMessage(models.Model):
     Message_Text = models.CharField(max_length=200, default="DEFAULT_MESSAGE")
-    Time_Stamp = models.DateField()
+    Time_Stamp = models.DateTimeField()
     Author = models.ForeignKey(User, default=-1,  on_delete=models.SET_DEFAULT)
     GroupConvo = models.ForeignKey(ConvoPreview, default=-1,  on_delete=models.SET_DEFAULT)
     MessageId = models.AutoField(primary_key=True, unique=True)

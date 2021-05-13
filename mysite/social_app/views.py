@@ -34,6 +34,10 @@ class HomePage(TemplateView):
         context['NewConvoForm'] = convoForm
         context['favorites'] = favorites
         context['ConvoPreview'] = ConvoPreview.objects.all()
+        if len(favorites) != 0:
+            context['hasFavorites'] = True
+        else:
+            context['hasFavorites'] = False
         return context
 
     def post(self, request, *args, **kwargs):
@@ -62,7 +66,7 @@ class HomePage(TemplateView):
             NewConvo = ConvoPreview.objects.create(Group_Name = Title, Thumbnail = Thumbnail, Description = Description, GroupId = GroupId)
         convoForm = NewConvoForm()
 
-        
+
         if not self.request.user.is_anonymous:
             dictionaryOfLikes = {}
             for groupConvo in ConvoPreview.objects.all():
@@ -84,6 +88,10 @@ class HomePage(TemplateView):
         context['Post_Likes'] = Post_Likes.objects.all()
         context['ConvoPreview'] = ConvoPreview.objects.all()
         context['favorites'] = favorites
+        if len(favorites) != 0:
+            context['hasFavorites'] = True
+        else:
+            context['hasFavorites'] = False
         return render(request, "./social_app/HomePage.html",context)
     #def get_queryset(self):
         # context = {'isGuest': isGuest,

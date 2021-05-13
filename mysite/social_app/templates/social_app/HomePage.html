@@ -35,7 +35,6 @@
               </span></p>
             {% endif %}
           </li>
-          {{hasFavorites}}
           {% if hasFavorites %}
             <li class="nav-item">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="nav-label">Favorites</span><span class="caret"></span></a>
@@ -91,12 +90,13 @@
       </div>
     {% endfor %}
 
-
-    <form enctype="multipart/form-data" method="POST">
-      {% csrf_token %}
-      {{NewConvoForm.as_p}}
-      <button type="submit" style="" value="Submit"> New Group Conversation </button>
-    </form>
+    {% if user.is_authenticated %}
+      <form enctype="multipart/form-data" method="POST">
+        {% csrf_token %}
+        {{NewConvoForm.as_p}}
+        <button type="submit" style="" value="Submit"> New Group Conversation </button>
+      </form>
+    {% endif %}
 
 
   </body>

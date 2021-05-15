@@ -16,79 +16,81 @@
 
   </head>
   <body bgcolor="#111144">
-    <nav class="navbar navbar-inverse sticky-top bg-dark">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="#">Discourse</a>
-        </div>
-        <ul class="nav navbar-nav">
-          <li class="nav-item"><a href="../../"></a>
-            {% if user.is_authenticated %}
-              Hi {{ user.username }}!
-              <p><a href="{% url 'social_app:logout' %}?next={{request.path}}">Log Out</a></p>
-            {% else %}
-              <p>You are not logged in</p>
-              <p><span>
-                <a href="{% url 'social_app:login' %}?next={{request.path}}">Log In</a>
-                or
-                <a href="{% url 'social_app:registration' %}?next={{request.path}}">Register</a>
-              </span></p>
-            {% endif %}
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Discourse</a>
+      </div>
+      <ul class="navbar-nav justify-content-end ml-auto">
+        {% if hasFavorites %}
+        <!-- Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+              Favorites
+            </a>
+            <div class="dropdown-menu">
+              {% for liked in favorites %}
+                <a class="dropdown-item" href="./messages/{{liked.post.GroupId}}">{{liked.post.Group_Name}}</a>
+              {% endfor %}
+            </div>
           </li>
-          {% if hasFavorites %}
-            <li class="nav-item">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="nav-label">Favorites</span><span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  {% for liked in favorites %}
-                    <li><a href="./messages/{{liked.post.GroupId}}">{{liked.post.Group_Name}}</a></li>
-                  {% endfor %}
-                </ul>
-            </li>
-          {% endif %}
-          <!-- add a personalized page -->
-        </ul>
+        {% endif %}
+        <!-- add a personalized page -->
+      </ul>
+      <div>
+        {% if user.is_authenticated %}
+          <p style="padding: 1px; margin: 1px"> Hi {{ user.username }}! </p>
+          <a class="nav-link" href="{% url 'social_app:logout' %}?next={{request.path}}" style="padding: 1px; margin: 1px; padding-left: 8px">Log Out</a>
+        {% else %}
+          <p style="padding: 1px; margin: 1px"> You are not logged in </p>
+          <span>
+            <a class="nav-link" href="{% url 'social_app:login' %}?next={{request.path}}" style="display:inline-block; padding: 1px; margin: 1px; padding-left: 10px">Log In</a>
+            <p style="display:inline-block; padding: 1px; margin: 1px"> or </p>
+            <a class="nav-link" href="{% url 'social_app:registration' %}?next={{request.path}}" style="display:inline-block; padding: 1px; margin: 1px">Register</a>
+          </span>
+        {% endif %}
       </div>
     </nav>
 
+    <div class="container-fluid bcontent">
+      <div class="card-columns">
+        {% for groupConvo in ConvoPreview %}
+          <div class="card">
+            <div class="container">
+              <div class="col-sm">
+                <h1>{{groupConvo.Group_Name}}</h1>
+                <img src="{{groupConvo.Thumbnail.url}}" href="./messages/{{groupConvo.GroupId}}" class="mr-3 mt-7 rounded-circle" style="width:100px;"/>
+                <p style="display:inline-block;"> {{groupConvo.Description}} </p>
+                <a href="./messages/{{groupConvo.GroupId}}"> Go There -> </a>
+              </div>
+              <div class="col-sm">
+              </div>
 
-    {% for groupConvo in ConvoPreview %}
-
-      <div class="media border p-3">
-        <div class="container">
-          <div class="col-sm">
-            <h1>{{groupConvo.Group_Name}}</h1>
-            <img src="{{groupConvo.Thumbnail.url}}" class="mr-3 mt-7 rounded-circle" style="width:100px;"/>
-            <p> {{groupConvo.Description}} </p>
-            <a href="./messages/{{groupConvo.GroupId}}"> linkie </a>
+              <div class="col-sm">
+                <p style="display:inline-block; padding-left: 10px;"> Likes: {{groupConvo.view_count}} </p>
+                <form method="POST" style="display:inline-block;">
+                  {% csrf_token %}
+                  {{starForm.as_p}}
+                  <input type="hidden" name="star" value="{{groupConvo.GroupId}}">
+                  {% for key, values in Dictionary.items %}
+                    {% if key == groupConvo.GroupId %}
+                      {% if values %}
+                        <button type="submit" style="background-color: transparent; border:none">
+                          <img src="/media/colored_star.png" style="width:20px"/>
+                        </button>
+                      {% else %}
+                        <button type="submit" style="background-color: transparent; border:none">
+                          <img src="/media/uncolored_star.png" style="width:20px"/>
+                        </button>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </form>
+              </div>
+            </div>
           </div>
-          <div class="col-sm">
-          </div>
-
-          <div class="col-sm">
-            <p> Likes: {{groupConvo.view_count}} </p>
-            <form method="POST">
-              {% csrf_token %}
-              {{starForm.as_p}}
-              <input type="hidden" name="star" value="{{groupConvo.GroupId}}">
-              {% for key, values in Dictionary.items %}
-                {% if key == groupConvo.GroupId %}
-                  {% if values %}
-                    <button type="submit" style="background-color: transparent; border:none">
-                      <img src="/media/colored_star.png" style="width:20px"/>
-                    </button>
-                  {% else %}
-                    <button type="submit" style="background-color: transparent; border:none">
-                      <img src="/media/uncolored_star.png" style="width:20px"/>
-                    </button>
-                  {% endif %}
-                {% endif %}
-              {% endfor %}
-            </form>
-          </div>
-
-        </div>
+        {% endfor %}
       </div>
-    {% endfor %}
+    </div>
 
     {% if user.is_authenticated %}
       <form enctype="multipart/form-data" method="POST">

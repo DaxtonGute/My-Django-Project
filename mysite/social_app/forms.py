@@ -32,3 +32,6 @@ class DeleteMessage(forms.Form):
 
 class StarGroupConvo(forms.Form):
      star = forms.CharField(required = False)
+
+class FilterBy(forms.Form):
+     star = forms.CharField(required = False)

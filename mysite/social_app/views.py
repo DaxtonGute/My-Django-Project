@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 
 from .models import ConvoPreview, UserMessage, Post_Likes
 from .forms import NewPostForm, NewConvoForm, SignUpForm, DeleteMessage, StarGroupConvo
@@ -62,7 +63,6 @@ class HomePage(TemplateView):
             Thumbnail = convoForm.cleaned_data['Thumbnail']
             GroupId = ConvoPreview.objects.count()
             # args = {'Message': Message, 'Date': Date, 'Author': Author, 'Convo': Convo}
-            print(Thumbnail)
             NewConvo = ConvoPreview.objects.create(Group_Name = Title, Thumbnail = Thumbnail, Description = Description, GroupId = GroupId)
         convoForm = NewConvoForm()
 
@@ -221,7 +221,6 @@ class registration(TemplateView):
             user = authenticate(username=username,
                                  email=email,
                                  password=password)
-            User.objects.create(user = user)
             login(request, user)
             return redirect('../')
         else:

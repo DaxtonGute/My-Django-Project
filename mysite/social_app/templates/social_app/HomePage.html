@@ -20,11 +20,16 @@
       <div class="navbar-header">
         <a class="navbar-brand" href="#">Discourse</a>
       </div>
-      <ul class="navbar-nav justify-content-end ml-auto">
+      <div class="btn-group ml-auto">
+       <button type="button" class="btn btn-secondary"><img src="/media/colored_clock.png" href="./messages/{{groupConvo.GroupId}}" style="width:20px;"/></button>
+       <button type="button" class="btn btn-secondary"><img src="/media/colored_fire.png" href="./messages/{{groupConvo.GroupId}}" style="width:20px;"/></button>
+       <button type="button" class="btn btn-secondary"><img src="/media/colored_like.png" href="./messages/{{groupConvo.GroupId}}" style="width:20px;"/></button>
+      </div>
+      <ul class="navbar-nav ml-auto">
         {% if hasFavorites %}
         <!-- Dropdown -->
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
               Favorites
             </a>
             <div class="dropdown-menu">

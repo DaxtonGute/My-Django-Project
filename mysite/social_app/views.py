@@ -62,8 +62,9 @@ class HomePage(TemplateView):
             Description = convoForm.cleaned_data['Description']
             Thumbnail = convoForm.cleaned_data['Thumbnail']
             GroupId = ConvoPreview.objects.count()
+            Date = datetime.datetime.today()
             # args = {'Message': Message, 'Date': Date, 'Author': Author, 'Convo': Convo}
-            NewConvo = ConvoPreview.objects.create(Group_Name = Title, Thumbnail = Thumbnail, Description = Description, GroupId = GroupId)
+            NewConvo = ConvoPreview.objects.create(Group_Name = Title, Thumbnail = Thumbnail, Description = Description, GroupId = GroupId, Time_Stamp = Date)
         convoForm = NewConvoForm()
 
 

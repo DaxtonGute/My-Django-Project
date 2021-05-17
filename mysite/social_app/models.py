@@ -12,6 +12,7 @@ class ConvoPreview(models.Model):
     Thumbnail = models.ImageField(upload_to ='uploads/', default='/404.png')
     GroupId = models.IntegerField(unique=True)
     Description = models.CharField(max_length=500, default="DEFAULT_DESCRIPTION")
+    Time_Stamp = models.DateTimeField()
 
     def __str__(self):
         groupid = "GROUP ("+str(self.GroupId) +")"

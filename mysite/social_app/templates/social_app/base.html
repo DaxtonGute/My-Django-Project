@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Home</title>
+
+    <!-- This section (4 items) includes Bootstrap 4 -->
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+      <!-- jQuery library -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <!-- Popper JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+      <!-- Latest compiled JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+  </head>
+  <body bgcolor="#111144">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+      <div class="navbar-header">
+
+        <!-- home -->
+        {% if request.path == "/" %}
+          <a class="navbar-brand" href="#"> <img src="/media/Discourse_logo.png" style="width:70px;"/> Discourse</a>
+        {% endif %}
+
+        <!-- messages -->
+        {% if request.path|slice:":9" == '/messages' %}
+          {% for groupConvo in ConvoPreview %}
+            {% if groupConvo.GroupId|slugify == GroupConvoID %}
+              <a class="navbar-brand" href="../../"> <img src="/media/Discourse_logo.png" style="width:70px;"/> Discourse - {{groupConvo.Group_Name}}</a>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <!-- home -->
+      {% if request.path == "/" %}
+        <div class="btn-group ml-auto">
+         <button type="button" class="btn btn-secondary"><img src="/media/uncolored_clock.png" style="width:20px;"/></button>
+         <button type="button" class="btn btn-secondary"><img src="/media/uncolored_fire.png" style="width:20px;"/></button>
+         <button type="button" class="btn btn-secondary"><img src="/media/uncolored_like.png" style="width:20px;"/></button>
+        </div>
+      {% endif %}
+
+      <ul class="navbar-nav ml-auto">
+
+        <!-- home -->
+        {% if request.path == "/" %}
+          {% if hasFavorites %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                Favorites
+              </a>
+              <div class="dropdown-menu">
+                {% for liked in favorites %}
+                  <a class="dropdown-item" href="./messages/{{liked.post.GroupId}}">{{liked.post.Group_Name}}</a>
+                {% endfor %}
+              </div>
+            </li>
+          {% endif %}
+        {% endif %}
+
+        <!-- messages -->
+        {% if request.path|slice:":9" == '/messages' %}
+          {% if user.is_authenticated %}
+            <li><a href="../../">
+              <form method="POST">
+                {% csrf_token %}
+                {{starForm.as_p}}
+                <input type="hidden" name="star" value="{{GroupConvoID}}">
+                <button type="submit" style="background-color: transparent; border:none">
+                  {% if starred %}
+                    <img src="/media/colored_star.png" style="width:50px"/>
+                  {% else %}
+                    <img src="/media/uncolored_star.png" style="width:50px"/>
+                  {% endif %}
+                </button>
+              </form>
+            </a></li>
+          {% endif %}
+        {% endif %}
+      </ul>
+
+      <!-- all -->
+      <div>
+        {% if user.is_authenticated %}
+          <p style="padding: 1px; margin: 1px"> Hi {{ user.username }}! </p>
+          <a class="nav-link" href="{% url 'social_app:logout' %}?next={{request.path}}" style="padding: 1px; margin: 1px; padding-left: 8px">Log Out</a>
+        {% else %}
+          <p style="padding: 1px; margin: 1px"> You are not logged in </p>
+          <span>
+            <a class="nav-link" href="{% url 'social_app:login' %}?next={{request.path}}" style="display:inline-block; padding: 1px; margin: 1px; padding-left: 10px">Log In</a>
+            <p style="display:inline-block; padding: 1px; margin: 1px"> or </p>
+            <a class="nav-link" href="{% url 'social_app:registration' %}?next={{request.path}}" style="display:inline-block; padding: 1px; margin: 1px">Register</a>
+          </span>
+        {% endif %}
+      </div>
+    </nav>
+    {% block content %}{% endblock content %}
+  </body>
+</html>

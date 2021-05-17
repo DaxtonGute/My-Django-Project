@@ -1,83 +1,34 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Messages</title>
+{% extends "./base.html" %}
 
-    <!-- This section (4 items) includes Bootstrap 4 -->
-      <!-- Latest compiled and minified CSS -->
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
-      <!-- jQuery library -->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-      <!-- Popper JS -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-      <!-- Latest compiled JavaScript -->
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-      <meta charset="utf-8">
+{% block content %}
 
-  </head>
-  <body bgcolor="#111144" onload="window.scrollTo(0,document.body.scrollHeight);">
-    <nav class="navbar navbar-inverse sticky-top bg-dark">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <!-- better way to do this -->
-          {% for groupConvo in ConvoPreview %}
-            {% if groupConvo.GroupId|slugify == GroupConvoID %}
-              <a class="navbar-brand" href="../../">Discourse - {{groupConvo.Group_Name}}</a>
-            {% endif %}
-          {% endfor %}
-        </div>
-        <ul class="nav navbar-nav">
-          {% if user.is_authenticated %}
-            <li><a href="../../">
-              <form method="POST">
-                {% csrf_token %}
-                {{starForm.as_p}}
-                <input type="hidden" name="star" value="{{GroupConvoID}}">
-                <button type="submit" style="background-color: transparent; border:none">
-                  {% if starred %}
-                    <img src="/media/colored_star.png" style="width:50px"/>
-                  {% else %}
-                    <img src="/media/uncolored_star.png" style="width:50px"/>
-                  {% endif %}
-                </button>
-              </form>
-            </a></li>
-          {% endif %}
+  {% for message in UserMessage %}
+    {% if message.GroupConvo.GroupId|slugify == GroupConvoID  %}
+      <hr>
+      <h2><b>{{message.Author.username}}</b>   <i>{{message.Time_Stamp}}</i></h2>
+      <p>{{message.Message_Text}}</p>
 
-          <!-- add a personalized page -->
-        </ul>
-      </div>
-    </nav>
-
-
-
-    {% for message in UserMessage %}
-      {% if message.GroupConvo.GroupId|slugify == GroupConvoID  %}
-        <hr>
-        <h2><b>{{message.Author.username}}</b>   <i>{{message.Time_Stamp}}</i></h2>
-        <p>{{message.Message_Text}}</p>
-
-        {% if message.Author.username == user.username %}
-          <form method="POST">
-             {% csrf_token %}
-             {{deleteForm.as_p}}
-             <input type="hidden" name="deleteBtn" value="{{message}}">
-             <button type="submit">DeleteMessage</button>
-          </form>
-        {% endif %}
+      {% if message.Author.username == user.username %}
+        <form method="POST">
+           {% csrf_token %}
+           {{deleteForm.as_p}}
+           <input type="hidden" name="deleteBtn" value="{{message}}">
+           <button type="submit">DeleteMessage</button>
+        </form>
       {% endif %}
-    {% endfor %}
+    {% endif %}
+  {% endfor %}
 
 
-    {% if user.is_authenticated %}
-      <form method="POST">
-        {% csrf_token %}
-        {{ NewPostForm.as_p }}
-        <button type="submit">Submit</button>
-      {% else %}
-        <p>You must log in to post</p>
-        <a href="{% url 'social_app:login' %}?next={{request.path}}">Log In</a>
-      {% endif %}
-    </form>
-  </body>
-</html>
+  {% if user.is_authenticated %}
+    <form method="POST">
+      {% csrf_token %}
+      {{ NewPostForm.as_p }}
+      <button type="submit">Submit</button>
+    {% else %}
+      <p>You must log in to post</p>
+      <a href="{% url 'social_app:login' %}?next={{request.path}}">Log In</a>
+    {% endif %}
+  </form>
+
+{% endblock content %}

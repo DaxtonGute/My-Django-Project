@@ -1,110 +1,54 @@
-<!DOCTYPE html>
-<html>
+{% extends "./base.html" %}
 
-  <head>
-    <title>Home</title>
+{% block content %}
 
-    <!-- This section (4 items) includes Bootstrap 4 -->
-      <!-- Latest compiled and minified CSS -->
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
-      <!-- jQuery library -->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-      <!-- Popper JS -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-      <!-- Latest compiled JavaScript -->
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
-  </head>
-  <body bgcolor="#111144">
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#"> <img src="/media/Discourse_logo.png" style="width:70px;"/> Discourse</a>
-      </div>
-      <div class="btn-group ml-auto">
-       <button type="button" class="btn btn-secondary"><img src="/media/colored_clock.png" style="width:20px;"/></button>
-       <button type="button" class="btn btn-secondary"><img src="/media/colored_fire.png" style="width:20px;"/></button>
-       <button type="button" class="btn btn-secondary"><img src="/media/colored_like.png" style="width:20px;"/></button>
-      </div>
-      <ul class="navbar-nav ml-auto">
-        {% if hasFavorites %}
-        <!-- Dropdown -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-              Favorites
-            </a>
-            <div class="dropdown-menu">
-              {% for liked in favorites %}
-                <a class="dropdown-item" href="./messages/{{liked.post.GroupId}}">{{liked.post.Group_Name}}</a>
-              {% endfor %}
+  <div class="container-fluid bcontent">
+    <div class="card-columns">
+      {% for groupConvo in ConvoPreview %}
+        <div class="card">
+          <div class="container">
+            <div class="col-sm">
+              <h1>{{groupConvo.Group_Name}}</h1>
+              <img src="{{groupConvo.Thumbnail.url}}" href="./messages/{{groupConvo.GroupId}}" class="mr-3 mt-7 rounded-circle" style="width:100px;"/>
+              <p style="display:inline-block;"> {{groupConvo.Description}} </p>
+              <a href="./messages/{{groupConvo.GroupId}}"> Go There -> </a>
             </div>
-          </li>
-        {% endif %}
-        <!-- add a personalized page -->
-      </ul>
-      <div>
-        {% if user.is_authenticated %}
-          <p style="padding: 1px; margin: 1px"> Hi {{ user.username }}! </p>
-          <a class="nav-link" href="{% url 'social_app:logout' %}?next={{request.path}}" style="padding: 1px; margin: 1px; padding-left: 8px">Log Out</a>
-        {% else %}
-          <p style="padding: 1px; margin: 1px"> You are not logged in </p>
-          <span>
-            <a class="nav-link" href="{% url 'social_app:login' %}?next={{request.path}}" style="display:inline-block; padding: 1px; margin: 1px; padding-left: 10px">Log In</a>
-            <p style="display:inline-block; padding: 1px; margin: 1px"> or </p>
-            <a class="nav-link" href="{% url 'social_app:registration' %}?next={{request.path}}" style="display:inline-block; padding: 1px; margin: 1px">Register</a>
-          </span>
-        {% endif %}
-      </div>
-    </nav>
+            <div class="col-sm">
+            </div>
 
-    <div class="container-fluid bcontent">
-      <div class="card-columns">
-        {% for groupConvo in ConvoPreview %}
-          <div class="card">
-            <div class="container">
-              <div class="col-sm">
-                <h1>{{groupConvo.Group_Name}}</h1>
-                <img src="{{groupConvo.Thumbnail.url}}" href="./messages/{{groupConvo.GroupId}}" class="mr-3 mt-7 rounded-circle" style="width:100px;"/>
-                <p style="display:inline-block;"> {{groupConvo.Description}} </p>
-                <a href="./messages/{{groupConvo.GroupId}}"> Go There -> </a>
-              </div>
-              <div class="col-sm">
-              </div>
-
-              <div class="col-sm">
-                <p style="display:inline-block; padding-left: 10px;"> Likes: {{groupConvo.view_count}} </p>
-                <form method="POST" style="display:inline-block;">
-                  {% csrf_token %}
-                  {{starForm.as_p}}
-                  <input type="hidden" name="star" value="{{groupConvo.GroupId}}">
-                  {% for key, values in Dictionary.items %}
-                    {% if key == groupConvo.GroupId %}
-                      {% if values %}
-                        <button type="submit" style="background-color: transparent; border:none">
-                          <img src="/media/colored_star.png" style="width:20px"/>
-                        </button>
-                      {% else %}
-                        <button type="submit" style="background-color: transparent; border:none">
-                          <img src="/media/uncolored_star.png" style="width:20px"/>
-                        </button>
-                      {% endif %}
+            <div class="col-sm">
+              <p style="display:inline-block; padding-left: 10px;"> Likes: {{groupConvo.view_count}} </p>
+              <form method="POST" style="display:inline-block;">
+                {% csrf_token %}
+                {{starForm.as_p}}
+                <input type="hidden" name="star" value="{{groupConvo.GroupId}}">
+                {% for key, values in Dictionary.items %}
+                  {% if key == groupConvo.GroupId %}
+                    {% if values %}
+                      <button type="submit" style="background-color: transparent; border:none">
+                        <img src="/media/colored_star.png" style="width:20px"/>
+                      </button>
+                    {% else %}
+                      <button type="submit" style="background-color: transparent; border:none">
+                        <img src="/media/uncolored_star.png" style="width:20px"/>
+                      </button>
                     {% endif %}
-                  {% endfor %}
-                </form>
-              </div>
+                  {% endif %}
+                {% endfor %}
+              </form>
             </div>
           </div>
-        {% endfor %}
-      </div>
+        </div>
+      {% endfor %}
     </div>
+  </div>
 
-    {% if user.is_authenticated %}
-      <form enctype="multipart/form-data" method="POST">
-        {% csrf_token %}
-        {{NewConvoForm.as_p}}
-        <button type="submit" style="" value="Submit"> New Group Conversation </button>
-      </form>
-    {% endif %}
+  {% if user.is_authenticated %}
+    <form enctype="multipart/form-data" method="POST">
+      {% csrf_token %}
+      {{NewConvoForm.as_p}}
+      <button type="submit" style="" value="Submit"> New Group Conversation </button>
+    </form>
+  {% endif %}
 
-
-  </body>
-</html
+{% endblock content %}

@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 
 from .models import ConvoPreview, UserMessage, Post_Likes
-from .forms import NewPostForm, NewConvoForm, SignUpForm, DeleteMessage, StarGroupConvo
+from .forms import NewPostForm, NewConvoForm, SignUpForm, DeleteMessage, StarGroupConvo, FilterBy
 import datetime
 
 class HomePage(TemplateView):
@@ -44,17 +44,18 @@ class HomePage(TemplateView):
     def post(self, request, *args, **kwargs):
         context = super(HomePage, self).get_context_data(*args,**kwargs)
         starGroupConvo = StarGroupConvo(request.POST)
-        if starGroupConvo.is_valid() and starGroupConvo.cleaned_data['star'] != "":
-            GroupConvoID = starGroupConvo.cleaned_data['star']
-            post = ConvoPreview.objects.get(GroupId=GroupConvoID)
-            number_of_likes = Post_Likes.objects.filter(user=request.user, post=post).count()
-            if number_of_likes > 0:
-                already_liked = True # pass this variable to your context
-                Post_Likes.objects.filter(user=request.user, post=post).delete()
-            else:
-                already_liked = False # you can make this anything other than boolean
-                new_like, created = Post_Likes.objects.get_or_create(user=request.user, post=post)
-        starGroupConvo = StarGroupConvo()
+        if not self.request.user.is_anonymous:
+            if starGroupConvo.is_valid() and starGroupConvo.cleaned_data['star'] != "":
+                GroupConvoID = starGroupConvo.cleaned_data['star']
+                post = ConvoPreview.objects.get(GroupId=GroupConvoID)
+                number_of_likes = Post_Likes.objects.filter(user=request.user, post=post).count()
+                if number_of_likes > 0:
+                    already_liked = True # pass this variable to your context
+                    Post_Likes.objects.filter(user=request.user, post=post).delete()
+                else:
+                    already_liked = False # you can make this anything other than boolean
+                    new_like, created = Post_Likes.objects.get_or_create(user=request.user, post=post)
+            starGroupConvo = StarGroupConvo()
 
         convoForm = NewConvoForm(request.POST, request.FILES)
         if convoForm.is_valid():
@@ -82,6 +83,18 @@ class HomePage(TemplateView):
         for postLike in Post_Likes.objects.all():
             if postLike.user == request.user:
                 favorites.append(postLike)
+
+        filterBy = FilterBy(request.POST)
+        if filterBy.is_valid():
+            print(filterBy)
+            if 'byRecent' in request.POST:
+                print("recent")
+            if 'byHot' in request.POST:
+                print("hot")
+            if 'byLikes' in request.POST:
+                print("likes")
+
+
 
 
         context['StarGroupConvo'] = starGroupConvo

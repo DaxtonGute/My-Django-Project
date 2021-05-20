@@ -39,11 +39,11 @@
         <form method="POST" class="ml-auto">
           {% csrf_token %}
           {{FilterBy}}
-          <input type="hidden" name="filter" value="{{GroupConvoID}}">
+          <input type="hidden" name="filter" value="{{GroupConvoID}}" id="filter">
           <div class="btn-group">
-           <input type="image" name="byRecent" src="/media/uncolored_clock.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary">
-           <input type="image" name="byHot" src="/media/uncolored_fire.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary">
-           <input type="image" name="byLikes" src="/media/uncolored_like.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary">
+           <input type="image" name="byRecent" src="/media/uncolored_clock.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary" onclick="document.getElementById('filter').value = 'byRecent';">
+           <input type="image" name="byHot" src="/media/uncolored_fire.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary" onclick="document.getElementById('filter').value = 'byHot';">
+           <input type="image" name="byLikes" src="/media/uncolored_like.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary" onclick="document.getElementById('filter').value = 'byLikes';">
         </div>
       {% endif %}
 

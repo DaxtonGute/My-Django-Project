@@ -12,6 +12,7 @@ import datetime
 class HomePage(TemplateView):
     template_name = "./social_app/HomePage.html"
     model = ConvoPreview
+
     def get_context_data(self,*args, **kwargs):
         context = super(HomePage, self).get_context_data(*args,**kwargs)
         if not self.request.user.is_anonymous:
@@ -86,12 +87,11 @@ class HomePage(TemplateView):
 
         filterBy = FilterBy(request.POST)
         if filterBy.is_valid():
-            print(filterBy)
-            if 'byRecent' in request.POST:
+            if filterBy.cleaned_data['filter'] == 'byRecent':
                 print("recent")
-            if 'byHot' in request.POST:
+            if filterBy.cleaned_data['filter'] == 'byHot':
                 print("hot")
-            if 'byLikes' in request.POST:
+            if filterBy.cleaned_data['filter'] == 'byLikes':
                 print("likes")
 
 

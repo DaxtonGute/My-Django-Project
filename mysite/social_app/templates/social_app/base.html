@@ -40,11 +40,25 @@
           {% csrf_token %}
           {{FilterBy}}
           <input type="hidden" name="filter" value="{{GroupConvoID}}" id="filter">
+          <input type="hidden" name="active" value="{{GroupConvoID}}" id="active">
           <div class="btn-group">
-           <input type="image" name="byRecent" src="/media/uncolored_clock.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary" onclick="document.getElementById('filter').value = 'byRecent';">
-           <input type="image" name="byHot" src="/media/uncolored_fire.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary" onclick="document.getElementById('filter').value = 'byHot';">
-           <input type="image" name="byLikes" src="/media/uncolored_like.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary" onclick="document.getElementById('filter').value = 'byLikes';">
-        </div>
+            {% if byRecent %}
+              <input type="image" name="byRecent" src="/media/colored_clock.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary" onclick="document.getElementById('filter').value = 'byRecent';document.getElementById('active').value = True;">
+            {% else %}
+              <input type="image" name="byRecent" src="/media/uncolored_clock.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary" onclick="document.getElementById('filter').value = 'byRecent';document.getElementById('active').value = False;">
+            {% endif %}
+            {% if byHot %}
+              <input type="image" name="byHot" src="/media/colored_fire.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary" onclick="document.getElementById('filter').value = 'byHot';document.getElementById('active').value = True;">
+            {% else %}
+              <input type="image" name="byHot" src="/media/uncolored_fire.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary" onclick="document.getElementById('filter').value = 'byHot';document.getElementById('active').value = False;">
+            {% endif %}
+            {% if byLikes %}
+              <input type="image" name="byLikes" src="/media/colored_like.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary" onclick="document.getElementById('filter').value = 'byLikes';document.getElementById('active').value = True;">
+            {% else %}
+              <input type="image" name="byLikes" src="/media/uncolored_like.png" border="0" alt="Submit" style="width: 50px;" class="btn btn-secondary" onclick="document.getElementById('filter').value = 'byLikes';document.getElementById('active').value = False;">
+            {% endif %}
+          </div>
+        </form>
       {% endif %}
 
       <ul class="navbar-nav ml-auto">

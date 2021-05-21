@@ -40,6 +40,9 @@ class HomePage(TemplateView):
             context['hasFavorites'] = True
         else:
             context['hasFavorites'] = False
+        context['byRecent'] = False
+        context['byHot'] = False
+        context['byLikes'] = False
         return context
 
     def post(self, request, *args, **kwargs):
@@ -85,16 +88,18 @@ class HomePage(TemplateView):
             if postLike.user == request.user:
                 favorites.append(postLike)
 
+        byRecent = False
+        byHot = False
+        byLikes = False
         filterBy = FilterBy(request.POST)
         if filterBy.is_valid():
             if filterBy.cleaned_data['filter'] == 'byRecent':
-                print("recent")
-            if filterBy.cleaned_data['filter'] == 'byHot':
-                print("hot")
-            if filterBy.cleaned_data['filter'] == 'byLikes':
-                print("likes")
-
-
+                print(filterBy.cleaned_data['active']) 
+                byRecent = not filterBy.cleaned_data['active']
+            elif filterBy.cleaned_data['filter'] == 'byHot':
+                byHot = not filterBy.cleaned_data['active']
+            elif filterBy.cleaned_data['filter'] == 'byLikes':
+                byLikes = not filterBy.cleaned_data['active']
 
 
         context['StarGroupConvo'] = starGroupConvo
@@ -106,25 +111,11 @@ class HomePage(TemplateView):
             context['hasFavorites'] = True
         else:
             context['hasFavorites'] = False
+
+        context['byRecent'] = byRecent
+        context['byHot'] = byHot
+        context['byLikes'] = byLikes
         return render(request, "./social_app/HomePage.html",context)
-    #def get_queryset(self):
-        # context = {'isGuest': isGuest,
-        #            'ConvoPreview': ConvoPreview.objects}
-        #return ConvoPreview.objects.all()
-
-    # logIn = request.POST.get('logIn')
-    # logOut = request.POST.get('logOut')
-    # switch = request.POST.get('switchViews')
-    # isGuest = False #how to access the global variable isGuest
-    # if logIn:
-    #     isGuest = False
-    # if logOut:
-    #     isGuest = True
-    # if switch:
-    #     isGuest = not isGuest
-
-    # print("hi")
-    # return render(request,'social_app/HomePage.html',{'isGuest': isGuest})
 
 class Messages(TemplateView):
     template_name = "./social_app/Messages.html"

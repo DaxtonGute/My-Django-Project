@@ -35,3 +35,4 @@ class StarGroupConvo(forms.Form):
 
 class FilterBy(forms.Form):
      filter = forms.CharField(required = False)
+     active = forms.BooleanField(required = False)

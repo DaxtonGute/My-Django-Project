@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.contrib.postgres.fields import ArrayField
 from django.dispatch import receiver
 from django.contrib.auth.models import User
+from math import log
 
 
 class ConvoPreview(models.Model):
@@ -21,6 +22,15 @@ class ConvoPreview(models.Model):
     @property
     def view_count(self):
         return Post_Likes.objects.filter(post=self).count()
+
+    @property
+    def hotness(self): #using reddit's argorithm for hotness
+        order = log(max(abs(Post_Likes.objects.filter(post=self).count()), 1), 10)
+        epoch = datetime.datetime(1970, 1, 1)
+        td = self.Time_Stamp.replace(tzinfo=None) - epoch
+        epoch_seconds = td.days * 86400 + td.seconds + (float(td.microseconds) / 1000000)
+        seconds = epoch_seconds - 1134028003
+        return round(order + seconds / 45000, 7)
 
 class Post_Likes(models.Model):
      user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -98,12 +98,14 @@ class HomePage(TemplateView):
             if filterBy.cleaned_data['filter'] == 'byRecent':
                 byRecent = not bool(filterBy.cleaned_data['active'])
                 RequestedConvos = ConvoPreview.objects.all().order_by('-Time_Stamp')
+
             elif filterBy.cleaned_data['filter'] == 'byHot':
                 byHot = not bool(filterBy.cleaned_data['active'])
-                RequestedConvos = ConvoPreview.objects.all().order_by('post_likes', '-Time_Stamp')
+                RequestedConvos = sorted(ConvoPreview.objects.all().order_by('-Time_Stamp'), key=lambda m: m.hotness)
+                
             elif filterBy.cleaned_data['filter'] == 'byLikes':
                 byLikes = not bool(filterBy.cleaned_data['active'])
-                RequestedConvos = ConvoPreview.objects.all().order_by('post_likes')
+                RequestedConvos = sorted(ConvoPreview.objects.all(),  key=lambda m: m.view_count)
 
 
         context['StarGroupConvo'] = starGroupConvo

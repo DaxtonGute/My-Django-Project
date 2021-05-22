@@ -91,21 +91,25 @@ class HomePage(TemplateView):
         byRecent = False
         byHot = False
         byLikes = False
+        RequestedConvos = ConvoPreview.objects.all()
         filterBy = FilterBy(request.POST)
         if filterBy.is_valid():
+            print(filterBy.cleaned_data['active'])
             if filterBy.cleaned_data['filter'] == 'byRecent':
-                print(filterBy.cleaned_data['active']) 
-                byRecent = not filterBy.cleaned_data['active']
+                byRecent = not bool(filterBy.cleaned_data['active'])
+                RequestedConvos = ConvoPreview.objects.all().order_by('-Time_Stamp')
             elif filterBy.cleaned_data['filter'] == 'byHot':
-                byHot = not filterBy.cleaned_data['active']
+                byHot = not bool(filterBy.cleaned_data['active'])
+                RequestedConvos = ConvoPreview.objects.all().order_by('post_likes', '-Time_Stamp')
             elif filterBy.cleaned_data['filter'] == 'byLikes':
-                byLikes = not filterBy.cleaned_data['active']
+                byLikes = not bool(filterBy.cleaned_data['active'])
+                RequestedConvos = ConvoPreview.objects.all().order_by('post_likes')
 
 
         context['StarGroupConvo'] = starGroupConvo
         context['NewConvoForm'] = convoForm
         context['Post_Likes'] = Post_Likes.objects.all()
-        context['ConvoPreview'] = ConvoPreview.objects.all()
+        context['ConvoPreview'] = RequestedConvos
         context['favorites'] = favorites
         if len(favorites) != 0:
             context['hasFavorites'] = True

@@ -43,12 +43,4 @@
     </div>
   </div>
 
-  {% if user.is_authenticated %}
-    <form enctype="multipart/form-data" method="POST">
-      {% csrf_token %}
-      {{NewConvoForm.as_p}}
-      <button type="submit" style="" value="Submit"> New Group Conversation </button>
-    </form>
-  {% endif %}
-
 {% endblock content %}

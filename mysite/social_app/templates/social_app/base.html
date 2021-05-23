@@ -65,6 +65,24 @@
 
         <!-- home -->
         {% if request.path == "/" %}
+          {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <button class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" style="color: grey;">
+                Add Group
+              </button>
+              <div class="dropdown-menu">
+                <form enctype="multipart/form-data" method="POST">
+                  {% csrf_token %}
+                  {{NewConvoForm.as_p}}
+                  <button type="submit" style="" value="Submit"> New Group Conversation </button>
+                </form>
+              </div>
+            </li>
+          {% endif %}
+        {% endif %}
+
+        <!-- home -->
+        {% if request.path == "/" %}
           {% if hasFavorites %}
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
@@ -103,13 +121,13 @@
       <!-- all -->
       <div>
         {% if user.is_authenticated %}
-          <p style="padding: 1px; margin: 1px"> Hi {{ user.username }}! </p>
+          <p style="padding: 1px; margin: 1px; color: grey;"> Hi {{ user.username }}! </p>
           <a class="nav-link" href="{% url 'social_app:logout' %}?next={{request.path}}" style="padding: 1px; margin: 1px; padding-left: 8px">Log Out</a>
         {% else %}
-          <p style="padding: 1px; margin: 1px"> You are not logged in </p>
+          <p style="padding: 1px; margin: 1px; color: grey;"> You are not logged in </p>
           <span>
             <a class="nav-link" href="{% url 'social_app:login' %}?next={{request.path}}" style="display:inline-block; padding: 1px; margin: 1px; padding-left: 10px">Log In</a>
-            <p style="display:inline-block; padding: 1px; margin: 1px"> or </p>
+            <p style="display:inline-block; padding: 1px; margin: 1px; color: grey;"> or </p>
             <a class="nav-link" href="{% url 'social_app:registration' %}?next={{request.path}}" style="display:inline-block; padding: 1px; margin: 1px">Register</a>
           </span>
         {% endif %}

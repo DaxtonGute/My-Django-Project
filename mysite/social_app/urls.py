@@ -10,8 +10,8 @@ from . import views
 
 app_name = 'social_app'
 urlpatterns = [
-    path('', views.HomePage.as_view(), name='HomePage'),
-    path('messages/<GroupConvoID>/', views.Messages.as_view(), name='Messages'),
+    path('', views.HomePage.as_view(), name='HomePage'),  # Home page does not have a path
+    path('messages/<GroupConvoID>/', views.Messages.as_view(), name='Messages'), # Each message has a custom id and that is stated in its path
     url(r'^login/$', auth_views.LoginView.as_view(), {'template_name':'registration/login.html'}, name='login'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
     url(r'^registration/$', views.registration.as_view(), {'template_name': 'registration/registration.html'}, name='registration'),

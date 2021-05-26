@@ -5,9 +5,12 @@
   {% for message in UserMessage %}
     {% if message.GroupConvo.GroupId|slugify == GroupConvoID  %}
       <hr>
+      <!-- gives the author and the time stamp -->
       <h2><b>{{message.Author.username}}</b>   <i>{{message.Time_Stamp}}</i></h2>
+      <!-- post message text -->
       <p>{{message.Message_Text}}</p>
 
+      <!-- this is the form for deleting a post (providing you were the one who made that post) -->
       {% if message.Author.username == user.username %}
         <form method="POST">
            {% csrf_token %}
@@ -19,7 +22,7 @@
     {% endif %}
   {% endfor %}
 
-
+  <!-- this is the form for posting a new post (providing you are signed-in) -->
   {% if user.is_authenticated %}
     <form method="POST">
       {% csrf_token %}

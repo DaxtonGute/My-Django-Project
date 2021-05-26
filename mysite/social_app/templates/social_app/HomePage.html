@@ -4,18 +4,25 @@
 
   <div class="container-fluid bcontent">
     <div class="card-columns">
+
+      <!-- this shows all of the convos  -->
       {% for groupConvo in ConvoPreview %}
         <div class="card">
           <div class="container">
             <div class="col-sm">
+              <!-- this is the convo name -->
               <h1>{{groupConvo.Group_Name}}</h1>
+              <!-- this is the convo image -->
               <img src="{{groupConvo.Thumbnail.url}}" href="./messages/{{groupConvo.GroupId}}" class="mr-3 mt-7 rounded-circle" style="width:100px;"/>
+              <!-- this is the convo description -->
               <p style="display:inline-block;"> {{groupConvo.Description}} </p>
+              <!-- this is the convo link -->
               <a href="./messages/{{groupConvo.GroupId}}"> Go There -> </a>
             </div>
             <div class="col-sm">
             </div>
 
+            <!-- this part handles the likes and toggling them -->
             <div class="col-sm">
               <p style="display:inline-block; padding-left: 10px;"> Likes: {{groupConvo.view_count}} </p>
               <form method="POST" style="display:inline-block;">

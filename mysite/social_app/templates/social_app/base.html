@@ -16,15 +16,18 @@
 
   </head>
   <body bgcolor="#111144">
+    <!-- the nav bar is used for each page and is thus it is the base for each page -->
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
       <div class="navbar-header">
 
         <!-- home -->
+        <!-- this is the banner that is displayed at the top of every home page -->
         {% if request.path == "/" %}
           <a class="navbar-brand" href="#"> <img src="/media/Discourse_logo.png" style="width:70px;"/> Discourse</a>
         {% endif %}
 
         <!-- messages -->
+        <!-- this is the banner that is displayed at the top of every message page -->
         {% if request.path|slice:":9" == '/messages' %}
           {% for groupConvo in ConvoPreview %}
             {% if groupConvo.GroupId|slugify == GroupConvoID %}
@@ -35,6 +38,7 @@
       </div>
 
       <!-- home -->
+      <!-- these are different filter buttons -->
       {% if request.path == "/" %}
         <form method="POST" class="ml-auto">
           {% csrf_token %}
@@ -64,6 +68,7 @@
       <ul class="navbar-nav ml-auto">
 
         <!-- home -->
+        <!-- to create a new group conversation, this form is used -->
         {% if request.path == "/" %}
           {% if user.is_authenticated %}
             <li class="nav-item dropdown">
@@ -82,6 +87,7 @@
         {% endif %}
 
         <!-- home -->
+        <!-- this gives us the pages that were starred by the user -->
         {% if request.path == "/" %}
           {% if hasFavorites %}
             <li class="nav-item dropdown">
@@ -98,6 +104,7 @@
         {% endif %}
 
         <!-- messages -->
+        <!-- this provides the star button for each group convo -->
         {% if request.path|slice:":9" == '/messages' %}
           {% if user.is_authenticated %}
             <li><a href="../../">
@@ -119,6 +126,7 @@
       </ul>
 
       <!-- all -->
+      <!-- this is the log in feature  -->
       <div>
         {% if user.is_authenticated %}
           <p style="padding: 1px; margin: 1px; color: grey;"> Hi {{ user.username }}! </p>
@@ -126,6 +134,7 @@
         {% else %}
           <p style="padding: 1px; margin: 1px; color: grey;"> You are not logged in </p>
           <span>
+            <!-- this logs me in but isn't in views so the user is automatically sent back to where they are current -->
             <a class="nav-link" href="{% url 'social_app:login' %}?next={{request.path}}" style="display:inline-block; padding: 1px; margin: 1px; padding-left: 10px">Log In</a>
             <p style="display:inline-block; padding: 1px; margin: 1px; color: grey;"> or </p>
             <a class="nav-link" href="{% url 'social_app:registration' %}?next={{request.path}}" style="display:inline-block; padding: 1px; margin: 1px">Register</a>

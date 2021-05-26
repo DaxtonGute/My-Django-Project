@@ -176,7 +176,7 @@ class Messages(TemplateView):
                     message.delete() # deletes the message
         deleteForm = DeleteMessage()
 
-
+        # checks likes for this user and this convo preview
         if not self.request.user.is_anonymous:
             starGroupConvo = StarGroupConvo(request.POST)
             if starGroupConvo.is_valid():
@@ -191,6 +191,7 @@ class Messages(TemplateView):
             starGroupConvo = StarGroupConvo()
             context['starred'] = not already_liked
 
+        # form for creating a new post
         postForm = NewPostForm(request.POST)
         if postForm.is_valid():
             Message = postForm.cleaned_data['Message']
@@ -199,9 +200,10 @@ class Messages(TemplateView):
             postForm = NewPostForm()
             for Convo in ConvoPreview.objects.all():
                  if str(Convo.GroupId) == GroupConvoID:
-                    NewMessage = UserMessage.objects.create(Message_Text = Message, Time_Stamp = Date, Author = Author, GroupConvo = Convo)
+                    NewMessage = UserMessage.objects.create(Message_Text = Message, Time_Stamp = Date, Author = Author, GroupConvo = Convo) # creates a new post
         postForm = NewPostForm()
 
+        #passes in context
         context['UserMessage'] = UserMessage.objects.all()
         context['ConvoPreview'] = ConvoPreview.objects.all()
         context['Post_Likes'] = Post_Likes.objects.all()
@@ -215,11 +217,14 @@ class registration(TemplateView):
 
     def get_context_data(self,*args, **kwargs): # this returns the context data when the user intially arrives
         context = super(registration, self).get_context_data(*args,**kwargs) # gets formatted context data for you to stuff context in
+        # gives the registration form context
         signUpForm = SignUpForm()
         context['SignUpForm'] = signUpForm
         return context
 
     def post(self, request, *args, **kwargs): # this returns the context data when the user interacts with the page
+
+        # its the default registration form
         signUpForm = SignUpForm(request.POST)
         if signUpForm.is_valid():
             user = signUpForm.save()
@@ -231,8 +236,8 @@ class registration(TemplateView):
             user = authenticate(username=username,
                                  email=email,
                                  password=password)
-            login(request, user)
-            return redirect('../')
+            login(request, user) # logs the user in
+            return redirect('../') # returns the user back to the main page
         else:
             signUpForm = SignUpForm()
 

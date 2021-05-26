@@ -1,5 +1,6 @@
 {% block content %}
     <h1>Create New Account</h1>
+    <!-- uses the default registration form -->
     <form method="POST">
          {% csrf_token %}
         {{SignUpForm.as_p}}

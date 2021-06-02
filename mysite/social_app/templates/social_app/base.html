@@ -72,7 +72,7 @@
         {% if request.path == "/" %}
           {% if user.is_authenticated %}
             <li class="nav-item dropdown">
-              <button class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" style="color: grey;">
+              <button class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" style="color: grey;margin-right:150px">
                 Add Group
               </button>
               <div class="dropdown-menu">
@@ -111,8 +111,8 @@
               <form method="POST">
                 {% csrf_token %}
                 {{starForm.as_p}}
-                <input type="hidden" name="star" value="{{GroupConvoID}}">
-                <button type="submit" style="background-color: transparent; border:none">
+                <input type="hidden" id="star" name="star" value="">
+                <button type="submit" style="background-color: transparent; border:none" onclick="document.getElementById('star').value={{GroupConvoID}}">
                   {% if starred %}
                     <img src="/media/colored_star.png" style="width:50px"/>
                   {% else %}

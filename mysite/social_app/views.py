@@ -176,21 +176,6 @@ class Messages(TemplateView):
                     message.delete() # deletes the message
         deleteForm = DeleteMessage()
 
-        # checks likes for this user and this convo preview
-        if not self.request.user.is_anonymous:
-            starGroupConvo = StarGroupConvo(request.POST)
-            if starGroupConvo.is_valid():
-                post = ConvoPreview.objects.get(GroupId=GroupConvoID)
-                number_of_likes = Post_Likes.objects.filter(user=request.user, post=post).count() # checks how many likes the user currently has on that post
-                if number_of_likes > 0: # changes the button's state and adds or deletes that post like depending on current state
-                    already_liked = True
-                    Post_Likes.objects.filter(user=request.user, post=post).delete()
-                else:
-                    already_liked = False
-                    new_like, created = Post_Likes.objects.get_or_create(user=request.user, post=post)
-            starGroupConvo = StarGroupConvo()
-            context['starred'] = not already_liked
-
         # form for creating a new post
         postForm = NewPostForm(request.POST)
         if postForm.is_valid():
@@ -202,6 +187,29 @@ class Messages(TemplateView):
                  if str(Convo.GroupId) == GroupConvoID:
                     NewMessage = UserMessage.objects.create(Message_Text = Message, Time_Stamp = Date, Author = Author, GroupConvo = Convo) # creates a new post
         postForm = NewPostForm()
+
+        # checks likes for this user and this convo preview
+        if not self.request.user.is_anonymous:
+            starGroupConvo = StarGroupConvo(request.POST)
+            if starGroupConvo.is_valid() and starGroupConvo.cleaned_data['star'] != "": # makes sure that the user is actually clicking on the star form
+                post = ConvoPreview.objects.get(GroupId=GroupConvoID)
+                number_of_likes = Post_Likes.objects.filter(user=request.user, post=post).count() # checks how many likes the user currently has on that post
+                if number_of_likes > 0: # changes the button's state and adds or deletes that post like depending on current state
+                    already_liked = True
+                    Post_Likes.objects.filter(user=request.user, post=post).delete()
+                else:
+                    already_liked = False
+                    new_like, created = Post_Likes.objects.get_or_create(user=request.user, post=post)
+            starGroupConvo = StarGroupConvo()
+            try:
+                context['starred'] = not already_liked # updates the button state
+            except: # otherwise, it keeps it the same
+                post = ConvoPreview.objects.get(GroupId=GroupConvoID)
+                number_of_likes = Post_Likes.objects.filter(user=request.user, post=post).count() # checks how many likes the user currently has on that post
+                if number_of_likes > 0: # changes the button's state and adds or deletes that post like depending on current state
+                    context['starred'] = True
+                else:
+                    context['starred'] = False
 
         #passes in context
         context['UserMessage'] = UserMessage.objects.all()

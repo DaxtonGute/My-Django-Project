@@ -32,17 +32,18 @@
                 {% for key, values in Dictionary.items %}
                   {% if key == groupConvo.GroupId %}
                     {% if values %}
-                      <button type="submit" style="background-color: transparent; border:none">
+                      <button type="submit" style="background-color: transparent; border:none; display:inline-block; padding-left: 10px;">
                         <img src="/media/colored_star.png" style="width:20px"/>
                       </button>
                     {% else %}
-                      <button type="submit" style="background-color: transparent; border:none">
+                      <button type="submit" style="background-color: transparent; border:none; display:inline-block; padding-left: 10px;">
                         <img src="/media/uncolored_star.png" style="width:20px"/>
                       </button>
                     {% endif %}
                   {% endif %}
                 {% endfor %}
               </form>
+              <p style="display:inline-block; padding-left: 10px; font-size: 8px;"> Date Created: {{groupConvo.Time_Stamp}} </p>
             </div>
           </div>
         </div>
